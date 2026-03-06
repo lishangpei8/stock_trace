@@ -391,14 +391,15 @@
         <form id="addForm" onsubmit="submitAdd(event)">
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">股票代码 *</label>
-                    <input type="text" class="form-input mono" name="stock_code" placeholder="600519" required maxlength="10" inputmode="numeric">
+                    <label class="form-label">股票代码</label>
+                    <input type="text" class="form-input mono" name="stock_code" placeholder="600519" maxlength="10" inputmode="numeric">
                 </div>
                 <div class="form-group">
                     <label class="form-label">股票名称</label>
-                    <input type="text" class="form-input" name="stock_name" placeholder="选填，自动补全">
+                    <input type="text" class="form-input" name="stock_name" placeholder="贵州茅台">
                 </div>
             </div>
+            <div id="formStockHint" style="font-size:11px;color:var(--text-muted);margin:-10px 0 14px 2px;display:none"></div>
             <div class="form-group">
                 <label class="form-label">推荐博主 *</label>
                 <input type="text" class="form-input" name="blogger" placeholder="博主名称" required>
@@ -686,12 +687,13 @@ function renderRecList() {
         const ret = rec.latest_return;
         const cls = ret > 0 ? 'positive' : ret < 0 ? 'negative' : 'neutral';
         const retStr = ret !== null ? (ret > 0 ? '+' : '') + ret.toFixed(2) + '%' : '—';
+        const priceStr = rec.latest_price ? '&#165;' + rec.latest_price.toFixed(2) : '';
         return `
         <div class="rec-card ${cls} animate-in" onclick="openDetail(${rec.id})">
             <div class="rec-top">
                 <div class="rec-stock-info">
                     <h3>${esc(rec.stock_name || rec.stock_code)}</h3>
-                    <div class="rec-stock-code">${esc(rec.stock_code)}</div>
+                    <div class="rec-stock-code">${esc(rec.stock_code)}${priceStr ? ' &middot; <span style="color:var(--text-secondary)">' + priceStr + '</span>' : ''}</div>
                 </div>
                 <div class="rec-return">
                     <div class="rec-return-value ${cls}">${retStr}</div>
@@ -764,10 +766,25 @@ function closeAddModal() {
 async function submitAdd(e) {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
+    const fd = new FormData(document.getElementById('addForm'));
+
+    const rawCode = (fd.get('stock_code') || '').trim();
+    const rawName = (fd.get('stock_name') || '').trim();
+
+    // 校验：代码和名称至少填一个
+    if (!rawCode && !rawName) {
+        showToast('请至少填写股票代码或名称', 'error');
+        return;
+    }
+
     btn.disabled = true; btn.textContent = '提交中...';
 
-    const fd = new FormData(document.getElementById('addForm'));
-    const stockCode = normalizeCode(fd.get('stock_code'));
+    // 判断用户输入的是代码还是名称
+    const isCode = rawCode && /^\d{4,6}$/.test(rawCode.replace(/[A-Za-z.]/g, ''));
+    const stockCode = isCode ? normalizeCode(rawCode) : '';
+    const stockName = rawName || (isCode ? '' : '');
+    // 如果只填了名称没填代码，search_name 字段留给 Action 解析
+    const searchName = (!stockCode && rawName) ? rawName : '';
 
     try {
         // 1. Read current recommendations
@@ -778,7 +795,8 @@ async function submitAdd(e) {
         const newRec = {
             id: data.next_id,
             stock_code: stockCode,
-            stock_name: fd.get('stock_name') || stockCode,
+            stock_name: stockName || stockCode,
+            search_name: searchName,
             blogger: fd.get('blogger'),
             channel: fd.get('channel') || '',
             recommend_date: fd.get('recommend_date') || new Date().toISOString().split('T')[0],
@@ -791,11 +809,12 @@ async function submitAdd(e) {
         data.next_id++;
 
         // 3. Commit to GitHub
+        const label = stockCode || rawName;
         await gh.updateFile(
             'data/recommendations.json',
             JSON.stringify(data, null, 2),
             sha,
-            `添加推荐: ${newRec.stock_code} by ${newRec.blogger}`
+            `添加推荐: ${label} by ${newRec.blogger}`
         );
 
         // 4. Trigger workflow
@@ -809,12 +828,32 @@ async function submitAdd(e) {
 
         document.getElementById('addForm').reset();
         closeAddModal();
-        showToast(`已添加 ${newRec.stock_code}，行情数据将在几分钟内更新`);
+        showToast(`已添加 ${label}，行情数据将在几分钟内更新`);
+
+        // 6. 轮询等待 Action 更新数据
+        startPollingForUpdate();
     } catch (err) {
         showToast('添加失败: ' + err.message, 'error');
     } finally {
         btn.disabled = false; btn.textContent = '添加追踪';
     }
+}
+
+// 添加后轮询刷新数据（等 Action 跑完）
+let pollTimer = null;
+function startPollingForUpdate() {
+    if (pollTimer) clearInterval(pollTimer);
+    let attempts = 0;
+    pollTimer = setInterval(async () => {
+        attempts++;
+        if (attempts > 10) { clearInterval(pollTimer); pollTimer = null; return; }
+        try {
+            await loadData();
+            // 检查是否有新数据（latest_price 不为空说明 Action 已更新）
+            const hasNewPrices = recommendations.some(r => r.latest_price && !returnsData._polled);
+            if (attempts >= 3) { clearInterval(pollTimer); pollTimer = null; }
+        } catch {}
+    }, 30000); // 每30秒检查一次
 }
 
 // ============================================================

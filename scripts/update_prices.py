@@ -37,6 +37,27 @@ def save_json(filename, data):
 
 # ========== 股票数据 ==========
 
+# 全局缓存: A股全量行情（避免反复拉取）
+_spot_df_cache = None
+
+
+def get_spot_df():
+    """获取A股全量实时行情（带缓存）"""
+    global _spot_df_cache
+    if _spot_df_cache is None:
+        logger.info("拉取 A 股全量行情数据...")
+        for attempt in range(3):
+            try:
+                _spot_df_cache = ak.stock_zh_a_spot_em()
+                logger.info(f"  共 {len(_spot_df_cache)} 只股票")
+                break
+            except Exception as e:
+                logger.warning(f"拉取全量行情失败(尝试{attempt+1}): {e}")
+                if attempt < 2:
+                    time.sleep(3)
+    return _spot_df_cache
+
+
 def normalize_code(code: str) -> str:
     code = code.strip().upper()
     for prefix in ["SH", "SZ", "BJ"]:
@@ -46,9 +67,53 @@ def normalize_code(code: str) -> str:
     return code.strip(".").zfill(6)
 
 
+def search_stock_by_name(name: str) -> tuple:
+    """
+    根据股票名称搜索代码
+    返回 (code, full_name)，未找到则返回 ("", "")
+    """
+    name = name.strip()
+    if not name:
+        return ("", "")
+
+    df = get_spot_df()
+    if df is None or df.empty:
+        return ("", "")
+
+    # 1. 精确匹配
+    exact = df[df["名称"] == name]
+    if not exact.empty:
+        row = exact.iloc[0]
+        return (str(row["代码"]), str(row["名称"]))
+
+    # 2. 包含匹配
+    contains = df[df["名称"].str.contains(name, na=False)]
+    if not contains.empty:
+        # 优先选择完全以该名称开头的（如 "茅台" 匹配 "贵州茅台"）
+        starts = contains[contains["名称"].str.contains(f".*{name}.*", na=False)]
+        if len(starts) == 1:
+            row = starts.iloc[0]
+            return (str(row["代码"]), str(row["名称"]))
+        # 多个结果时取第一个
+        row = contains.iloc[0]
+        logger.info(f"  名称 '{name}' 匹配到 {len(contains)} 只股票，选择第一个: {row['名称']}({row['代码']})")
+        return (str(row["代码"]), str(row["名称"]))
+
+    return ("", "")
+
+
 def get_stock_name(code: str) -> str:
     """获取股票名称，带重试"""
     code = normalize_code(code)
+
+    # 优先从全量行情缓存中获取（速度快）
+    df = get_spot_df()
+    if df is not None and not df.empty:
+        row = df[df["代码"] == code]
+        if not row.empty:
+            return str(row.iloc[0]["名称"])
+
+    # 备用：stock_individual_info_em
     for attempt in range(3):
         try:
             df = ak.stock_individual_info_em(symbol=code)
@@ -60,15 +125,6 @@ def get_stock_name(code: str) -> str:
             logger.warning(f"获取 {code} 名称失败(尝试{attempt+1}): {e}")
             if attempt < 2:
                 time.sleep(2)
-
-    # 备用方案
-    try:
-        df = ak.stock_zh_a_spot_em()
-        row = df[df["代码"] == code]
-        if not row.empty:
-            return str(row.iloc[0]["名称"])
-    except Exception as e:
-        logger.warning(f"备用方案获取 {code} 名称也失败: {e}")
     return ""
 
 
@@ -126,8 +182,32 @@ def main():
             continue
 
         active_count += 1
-        code = normalize_code(rec["stock_code"])
         rec_id = str(rec["id"])
+
+        # ====== 处理只有名称没有代码的情况 ======
+        code_raw = (rec.get("stock_code") or "").strip()
+        search_name = (rec.get("search_name") or "").strip()
+
+        if not code_raw or code_raw == "000000":
+            # 尝试用 search_name 或 stock_name 查找代码
+            lookup_name = search_name or rec.get("stock_name", "")
+            if lookup_name:
+                logger.info(f"[ID={rec_id}] 按名称查找: '{lookup_name}'")
+                found_code, found_name = search_stock_by_name(lookup_name)
+                if found_code:
+                    rec["stock_code"] = found_code
+                    rec["stock_name"] = found_name
+                    rec["search_name"] = ""  # 已解析，清空
+                    logger.info(f"  -> 找到: {found_name} ({found_code})")
+                else:
+                    logger.warning(f"  -> 未找到匹配的股票，跳过")
+                    continue
+            else:
+                logger.warning(f"[ID={rec_id}] 无代码也无名称，跳过")
+                continue
+
+        code = normalize_code(rec["stock_code"])
+        rec["stock_code"] = code  # 确保规范化
         logger.info(f"处理: {rec.get('stock_name', code)} ({code}) [ID={rec_id}]")
 
         # 补全股票名称
