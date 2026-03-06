@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="StockTrace">
+    <meta name="theme-color" content="#0a0b0f">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    <title>StockTrace — 推荐追踪</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-deep: #0a0b0f;
+            --bg-primary: #11131a;
+            --bg-card: #181b25;
+            --bg-card-hover: #1e2130;
+            --bg-input: #1a1d28;
+            --bg-modal: #14161f;
+            --border: #262a38;
+            --border-light: #2d3245;
+            --text-primary: #e8eaf0;
+            --text-secondary: #8b8fa4;
+            --text-muted: #565a6e;
+            --accent: #6c8cff;
+            --accent-glow: rgba(108, 140, 255, 0.15);
+            --gain: #2ecc8b;
+            --gain-bg: rgba(46, 204, 139, 0.08);
+            --gain-glow: rgba(46, 204, 139, 0.2);
+            --loss: #ff5c72;
+            --loss-bg: rgba(255, 92, 114, 0.08);
+            --loss-glow: rgba(255, 92, 114, 0.2);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --radius-xs: 6px;
+            --font-mono: 'DM Mono', monospace;
+            --font-sans: 'Outfit', -apple-system, sans-serif;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        .app { max-width: 480px; margin: 0 auto; padding-bottom: 80px; min-height: 100vh; position: relative; }
+
+        /* ===== Header ===== */
+        .header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(10, 11, 15, 0.85);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+        }
+        .header-top { display: flex; align-items: center; justify-content: space-between; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -1px; font-family: var(--font-mono);
+        }
+        .logo-text { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+        .logo-text span { color: var(--text-muted); font-weight: 300; font-size: 12px; margin-left: 6px; letter-spacing: 1px; text-transform: uppercase; }
+        .header-actions { display: flex; gap: 8px; }
+        .btn-icon {
+            width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all var(--transition); font-size: 16px;
+        }
+        .btn-icon:active { transform: scale(0.92); background: var(--bg-card-hover); }
+        .btn-icon.refreshing { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .tabs { display: flex; gap: 4px; margin-top: 14px; background: var(--bg-primary); border-radius: 10px; padding: 3px; }
+        .tab {
+            flex: 1; padding: 8px 12px; border-radius: 8px; text-align: center;
+            font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer;
+            transition: all var(--transition); border: none; background: none; letter-spacing: 0.2px;
+            font-family: var(--font-sans);
+        }
+        .tab.active { background: var(--bg-card); color: var(--text-primary); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+        /* ===== Content ===== */
+        .content { padding: 16px 20px; }
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* ===== Stats ===== */
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+        .stat-value { font-family: var(--font-mono); font-size: 22px; font-weight: 500; line-height: 1.2; }
+        .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+        /* ===== Rec Cards ===== */
+        .rec-list { display: flex; flex-direction: column; gap: 10px; }
+        .rec-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 16px; cursor: pointer; transition: all var(--transition); position: relative; overflow: hidden;
+        }
+        .rec-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+        .rec-card.positive::before { background: var(--gain); }
+        .rec-card.negative::before { background: var(--loss); }
+        .rec-card.neutral::before { background: var(--text-muted); }
+        .rec-card:active { transform: scale(0.98); background: var(--bg-card-hover); }
+        .rec-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .rec-stock-info h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; }
+        .rec-stock-code { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .rec-return { text-align: right; }
+        .rec-return-value { font-family: var(--font-mono); font-size: 20px; font-weight: 500; }
+        .rec-return-value.positive { color: var(--gain); }
+        .rec-return-value.negative { color: var(--loss); }
+        .rec-return-value.neutral { color: var(--text-muted); }
+        .rec-return-label { font-size: 11px; color: var(--text-muted); }
+        .rec-bottom { display: flex; justify-content: space-between; align-items: center; }
+        .rec-meta { display: flex; gap: 12px; font-size: 12px; color: var(--text-secondary); }
+        .rec-meta-item { display: flex; align-items: center; gap: 4px; }
+        .rec-meta-icon { opacity: 0.5; font-size: 12px; }
+        .rec-date { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+
+        /* ===== Blogger Cards ===== */
+        .blogger-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; }
+        .blogger-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .blogger-info { display: flex; align-items: center; gap: 12px; }
+        .blogger-rank {
+            width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+            background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border);
+        }
+        .blogger-rank.top-1 { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a1a; border: none; font-weight: 600; }
+        .blogger-rank.top-2 { background: linear-gradient(135deg, #c0c0c0, #a8a8a8); color: #1a1a1a; border: none; }
+        .blogger-rank.top-3 { background: linear-gradient(135deg, #cd7f32, #b5651d); color: #fff; border: none; }
+        .blogger-name { font-size: 15px; font-weight: 600; }
+        .blogger-channel { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+        .blogger-avg-return { font-family: var(--font-mono); font-size: 18px; font-weight: 500; }
+        .blogger-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .blogger-stat { text-align: center; padding: 8px 4px; background: var(--bg-input); border-radius: var(--radius-xs); }
+        .blogger-stat-value { font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+        .blogger-stat-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* ===== Settings ===== */
+        .settings-section { padding: 0; }
+        .settings-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+        .settings-card-title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+        .settings-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px; }
+        .settings-step { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+        .settings-step-num {
+            flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+            background: var(--accent-glow); color: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 600; font-family: var(--font-mono);
+        }
+        .settings-link { color: var(--accent); text-decoration: none; }
+        .settings-link:hover { text-decoration: underline; }
+        .settings-status { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 14px; }
+        .settings-status.connected { background: var(--gain-bg); color: var(--gain); border: 1px solid var(--gain-glow); }
+        .settings-status.disconnected { background: var(--loss-bg); color: var(--loss); border: 1px solid var(--loss-glow); }
+
+        /* ===== Modal / Form ===== */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 200;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show { opacity: 1; }
+        .modal {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+            width: 100%; max-width: 480px; max-height: 90vh;
+            background: var(--bg-modal); border-radius: 20px 20px 0 0; z-index: 201;
+            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1); overflow-y: auto;
+            border: 1px solid var(--border); border-bottom: none;
+        }
+        .modal.show { transform: translateX(-50%) translateY(0); }
+        .modal-handle { width: 36px; height: 4px; background: var(--border-light); border-radius: 4px; margin: 12px auto 0; }
+        .modal-header { padding: 16px 20px 12px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .modal-stock-name { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
+        .modal-stock-code { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+        .modal-return-badge { font-family: var(--font-mono); font-size: 16px; font-weight: 500; padding: 6px 14px; border-radius: 20px; }
+        .modal-return-badge.positive { background: var(--gain-bg); color: var(--gain); border: 1px solid var(--gain-glow); }
+        .modal-return-badge.negative { background: var(--loss-bg); color: var(--loss); border: 1px solid var(--loss-glow); }
+        .modal-meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 0 20px 16px; }
+        .modal-meta-item { background: var(--bg-input); border-radius: var(--radius-sm); padding: 10px 12px; }
+        .modal-meta-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+        .modal-meta-value { font-size: 14px; font-weight: 500; margin-top: 3px; }
+        .modal-chart-container { padding: 0 20px 20px; }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .chart-title { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+        .chart-wrapper { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 12px 12px; height: 220px; position: relative; }
+        .modal-actions { padding: 12px 20px 32px; display: flex; gap: 10px; }
+        .btn-modal-action {
+            flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text-secondary); font-family: var(--font-sans);
+            font-size: 13px; font-weight: 500; cursor: pointer; transition: all var(--transition);
+        }
+        .btn-modal-action:active { transform: scale(0.96); }
+        .btn-modal-action.danger { color: var(--loss); border-color: var(--loss-glow); }
+
+        .form-section { padding: 20px; }
+        .form-title { font-size: 20px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.3px; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500; }
+        .form-input {
+            width: 100%; padding: 12px 14px; background: var(--bg-input); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text-primary); font-family: var(--font-sans); font-size: 15px;
+            transition: border-color var(--transition); outline: none;
+        }
+        .form-input::placeholder { color: var(--text-muted); }
+        .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .form-input.mono { font-family: var(--font-mono); letter-spacing: 1px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-submit {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent), #a78bfa);
+            color: #fff; border: none; border-radius: var(--radius-sm); font-family: var(--font-sans);
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: all var(--transition); margin-top: 8px; letter-spacing: 0.2px;
+        }
+        .btn-submit:active { transform: scale(0.97); opacity: 0.9; }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .fab {
+            position: fixed; bottom: 24px; right: calc(50% - 210px);
+            width: 52px; height: 52px; background: linear-gradient(135deg, var(--accent), #a78bfa);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 24px; cursor: pointer; box-shadow: 0 4px 24px rgba(108, 140, 255, 0.35);
+            transition: all var(--transition); z-index: 50; border: none;
+        }
+        .fab:active { transform: scale(0.9); }
+        @media (max-width: 480px) { .fab { right: 20px; } }
+
+        .empty-state { text-align: center; padding: 48px 20px; }
+        .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+        .empty-text { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+
+        .loading { text-align: center; padding: 32px; color: var(--text-muted); font-size: 13px; }
+        .loading::after {
+            content: ''; display: inline-block; width: 16px; height: 16px;
+            border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin-left: 8px; vertical-align: middle;
+        }
+
+        .toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            padding: 12px 24px; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); font-size: 13px; z-index: 300;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3); transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            max-width: 90%; text-align: center;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.success { border-color: var(--gain-glow); color: var(--gain); }
+        .toast.error { border-color: var(--loss-glow); color: var(--loss); }
+
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .section-title { font-size: 14px; color: var(--text-secondary); font-weight: 500; letter-spacing: 0.2px; }
+        .section-filter {
+            font-size: 12px; color: var(--text-muted); cursor: pointer; padding: 4px 10px;
+            border-radius: 20px; border: 1px solid var(--border); background: none;
+            font-family: var(--font-sans); transition: all var(--transition);
+        }
+        .section-filter:active { background: var(--bg-card); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeInUp 0.4s ease both; }
+        .rec-card:nth-child(1) { animation-delay: 0.03s; }
+        .rec-card:nth-child(2) { animation-delay: 0.06s; }
+        .rec-card:nth-child(3) { animation-delay: 0.09s; }
+        .rec-card:nth-child(4) { animation-delay: 0.12s; }
+        .rec-card:nth-child(5) { animation-delay: 0.15s; }
+        .rec-card:nth-child(6) { animation-delay: 0.18s; }
+
+        @media (max-width: 360px) {
+            .stats-row { gap: 6px; }
+            .stat-value { font-size: 18px; }
+            .stat-card { padding: 10px; }
+            .blogger-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <!-- ===== Header ===== -->
+    <header class="header">
+        <div class="header-top">
+            <div class="logo">
+                <div class="logo-icon">ST</div>
+                <div class="logo-text">StockTrace<span>推荐追踪</span></div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" id="btnRefresh" onclick="triggerRefresh()" title="刷新行情">&#8635;</button>
+                <button class="btn-icon" onclick="switchTab('settings')" title="设置">&#9881;</button>
+            </div>
+        </div>
+        <div class="tabs">
+            <button class="tab active" data-tab="dashboard" onclick="switchTab('dashboard')">持仓追踪</button>
+            <button class="tab" data-tab="bloggers" onclick="switchTab('bloggers')">博主排行</button>
+        </div>
+    </header>
+
+    <div class="content">
+        <!-- ===== Dashboard ===== -->
+        <div class="section active" id="section-dashboard">
+            <div class="stats-row" id="statsRow">
+                <div class="stat-card animate-in"><div class="stat-value" id="statTotal">—</div><div class="stat-label">追踪数</div></div>
+                <div class="stat-card animate-in" style="animation-delay:.05s"><div class="stat-value" id="statWinRate" style="color:var(--gain)">—</div><div class="stat-label">胜率</div></div>
+                <div class="stat-card animate-in" style="animation-delay:.1s"><div class="stat-value" id="statAvgReturn">—</div><div class="stat-label">均收益</div></div>
+            </div>
+            <div class="section-header">
+                <div class="section-title">推荐列表</div>
+                <button class="section-filter" id="sortBtn" onclick="toggleSort()">按收益排序</button>
+            </div>
+            <div class="rec-list" id="recList"><div class="loading">加载中</div></div>
+        </div>
+
+        <!-- ===== Bloggers ===== -->
+        <div class="section" id="section-bloggers">
+            <div class="section-header"><div class="section-title">博主推荐排行榜</div></div>
+            <div id="bloggerList"><div class="loading">加载中</div></div>
+        </div>
+
+        <!-- ===== Settings ===== -->
+        <div class="section" id="section-settings">
+            <div class="settings-section">
+                <div class="settings-card">
+                    <div class="settings-card-title">连接状态</div>
+                    <div class="settings-status disconnected" id="connStatus">未连接 — 请完成以下配置</div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-card-title">GitHub 仓库配置</div>
+                    <div class="settings-desc">本应用将数据存储在你的 GitHub 仓库中，通过 GitHub Pages 提供访问，通过 GitHub Actions 自动更新行情。</div>
+                    <div class="form-group">
+                        <label class="form-label">仓库地址 (owner/repo)</label>
+                        <input type="text" class="form-input mono" id="cfgRepo" placeholder="例: zhangsan/stock-trace">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Personal Access Token</label>
+                        <input type="password" class="form-input mono" id="cfgToken" placeholder="ghp_xxxxxxxxxxxx">
+                    </div>
+                    <button class="btn-submit" onclick="saveSettings()" style="margin-top:4px">保存并连接</button>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-card-title">首次部署指南</div>
+                    <div class="settings-step">
+                        <div class="settings-step-num">1</div>
+                        <div>在 GitHub 创建一个新的公开仓库，将本项目代码推送上去</div>
+                    </div>
+                    <div class="settings-step">
+                        <div class="settings-step-num">2</div>
+                        <div>进入仓库 Settings → Pages → Source 选择 <b>Deploy from a branch</b>，Branch 选 <b>main</b>，文件夹选 <b>/ (root)</b>，保存</div>
+                    </div>
+                    <div class="settings-step">
+                        <div class="settings-step-num">3</div>
+                        <div>进入 GitHub Settings → <a class="settings-link" href="https://github.com/settings/tokens?type=beta" target="_blank">Developer settings → Fine-grained tokens</a>，新建 Token，选择对应仓库，权限勾选 <b>Contents (Read and write)</b> 和 <b>Actions (Write)</b></div>
+                    </div>
+                    <div class="settings-step">
+                        <div class="settings-step-num">4</div>
+                        <div>将仓库地址和 Token 填入上方，点击保存即可</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="fab" id="fabBtn" onclick="openAddModal()">+</button>
+</div>
+
+<!-- ===== Add Modal ===== -->
+<div class="modal-overlay" id="addOverlay" onclick="closeAddModal()"></div>
+<div class="modal" id="addModal">
+    <div class="modal-handle"></div>
+    <div class="form-section">
+        <div class="form-title">添加推荐记录</div>
+        <form id="addForm" onsubmit="submitAdd(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">股票代码 *</label>
+                    <input type="text" class="form-input mono" name="stock_code" placeholder="600519" required maxlength="10" inputmode="numeric">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">股票名称</label>
+                    <input type="text" class="form-input" name="stock_name" placeholder="选填，自动补全">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">推荐博主 *</label>
+                <input type="text" class="form-input" name="blogger" placeholder="博主名称" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">推荐渠道</label>
+                <input type="text" class="form-input" name="channel" placeholder="微博 / B站 / 雪球">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">推荐日期</label>
+                    <input type="date" class="form-input" name="recommend_date">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">推荐价格</label>
+                    <input type="number" step="0.01" class="form-input mono" name="recommend_price" placeholder="自动获取" inputmode="decimal">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">备注</label>
+                <input type="text" class="form-input" name="note" placeholder="可选备注信息">
+            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">添加追踪</button>
+        </form>
+    </div>
+</div>
+
+<!-- ===== Detail Modal ===== -->
+<div class="modal-overlay" id="detailOverlay" onclick="closeDetailModal()"></div>
+<div class="modal" id="detailModal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+        <div>
+            <div class="modal-stock-name" id="detailName">—</div>
+            <div class="modal-stock-code" id="detailCode">—</div>
+        </div>
+        <div class="modal-return-badge" id="detailReturnBadge">—</div>
+    </div>
+    <div class="modal-meta-grid">
+        <div class="modal-meta-item"><div class="modal-meta-label">推荐博主</div><div class="modal-meta-value" id="detailBlogger">—</div></div>
+        <div class="modal-meta-item"><div class="modal-meta-label">推荐渠道</div><div class="modal-meta-value" id="detailChannel">—</div></div>
+        <div class="modal-meta-item"><div class="modal-meta-label">推荐日期</div><div class="modal-meta-value" id="detailDate">—</div></div>
+        <div class="modal-meta-item"><div class="modal-meta-label">推荐价格</div><div class="modal-meta-value" id="detailPrice">—</div></div>
+    </div>
+    <div class="modal-chart-container">
+        <div class="chart-header">
+            <div class="chart-title">收益曲线</div>
+            <div class="chart-title" id="detailLatestPrice" style="font-family:var(--font-mono)">—</div>
+        </div>
+        <div class="chart-wrapper"><canvas id="returnChart"></canvas></div>
+    </div>
+    <div class="modal-actions">
+        <button class="btn-modal-action" onclick="closeDetailModal()">关闭</button>
+        <button class="btn-modal-action danger" onclick="deactivateRec()">停止追踪</button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+//  State
+// ============================================================
+const CONF_KEY = 'stocktrace_cfg';
+let config = {};           // { token, owner, repo }
+let gh = null;             // GitHub client instance
+let recommendations = [];  // merged rec list
+let returnsData = {};      // { rec_id: { latest_return, history, ... } }
+let bloggersData = [];
+let sortByReturn = false;
+let currentDetailId = null;
+let chartInstance = null;
+
+// ============================================================
+//  GitHub API Client
+// ============================================================
+class GitHub {
+    constructor(token, owner, repo) {
+        this.token = token;
+        this.owner = owner;
+        this.repo = repo;
+        this.api = 'https://api.github.com';
+    }
+
+    async request(method, path, body) {
+        const res = await fetch(`${this.api}${path}`, {
+            method,
+            headers: {
+                'Authorization': `Bearer ${this.token}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+                ...(body ? { 'Content-Type': 'application/json' } : {}),
+            },
+            body: body ? JSON.stringify(body) : undefined,
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || `GitHub API ${res.status}`);
+        }
+        return res.status === 204 ? null : res.json();
+    }
+
+    async getFile(path) {
+        const data = await this.request('GET', `/repos/${this.owner}/${this.repo}/contents/${path}?ref=main`);
+        const raw = atob(data.content.replace(/\n/g, ''));
+        // Decode UTF-8
+        const bytes = new Uint8Array([...raw].map(c => c.charCodeAt(0)));
+        const content = new TextDecoder().decode(bytes);
+        return { content, sha: data.sha };
+    }
+
+    async updateFile(path, content, sha, message) {
+        const encoded = btoa(new TextEncoder().encode(content).reduce((s, b) => s + String.fromCharCode(b), ''));
+        return this.request('PUT', `/repos/${this.owner}/${this.repo}/contents/${path}`, {
+            message, content: encoded, sha, branch: 'main'
+        });
+    }
+
+    async triggerWorkflow(workflow) {
+        return this.request('POST',
+            `/repos/${this.owner}/${this.repo}/actions/workflows/${workflow}/dispatches`,
+            { ref: 'main' }
+        );
+    }
+
+    async verify() {
+        return this.request('GET', `/repos/${this.owner}/${this.repo}`);
+    }
+}
+
+// ============================================================
+//  Config Persistence
+// ============================================================
+function loadConfig() {
+    try { config = JSON.parse(localStorage.getItem(CONF_KEY)) || {}; } catch { config = {}; }
+}
+
+function saveConfigToStorage() {
+    localStorage.setItem(CONF_KEY, JSON.stringify(config));
+}
+
+function isConfigured() {
+    return config.token && config.owner && config.repo;
+}
+
+// ============================================================
+//  Settings
+// ============================================================
+async function saveSettings() {
+    const repoFull = document.getElementById('cfgRepo').value.trim();
+    const token = document.getElementById('cfgToken').value.trim();
+    if (!repoFull || !token) { showToast('请填写完整信息', 'error'); return; }
+    const parts = repoFull.split('/');
+    if (parts.length !== 2) { showToast('仓库地址格式: owner/repo', 'error'); return; }
+
+    config = { token, owner: parts[0], repo: parts[1] };
+    gh = new GitHub(config.token, config.owner, config.repo);
+
+    try {
+        await gh.verify();
+        saveConfigToStorage();
+        updateConnStatus(true);
+        showToast('连接成功');
+        await loadData();
+        switchTab('dashboard');
+    } catch (e) {
+        updateConnStatus(false, e.message);
+        showToast('连接失败: ' + e.message, 'error');
+    }
+}
+
+function updateConnStatus(ok, msg) {
+    const el = document.getElementById('connStatus');
+    if (ok) {
+        el.className = 'settings-status connected';
+        el.textContent = `已连接 — ${config.owner}/${config.repo}`;
+    } else {
+        el.className = 'settings-status disconnected';
+        el.textContent = msg || '未连接 — 请完成以下配置';
+    }
+}
+
+// ============================================================
+//  Data Loading (from GitHub Pages static files)
+// ============================================================
+async function loadData() {
+    if (!isConfigured()) return;
+
+    const base = `https://${config.owner}.github.io/${config.repo}`;
+    const ts = Date.now();
+
+    try {
+        const [recsRes, retRes, blogRes] = await Promise.allSettled([
+            fetch(`${base}/data/recommendations.json?t=${ts}`),
+            fetch(`${base}/data/returns.json?t=${ts}`),
+            fetch(`${base}/data/bloggers.json?t=${ts}`),
+        ]);
+
+        if (recsRes.status === 'fulfilled' && recsRes.value.ok) {
+            const d = await recsRes.value.json();
+            recommendations = (d.recommendations || []).filter(r => r.is_active !== false);
+        } else {
+            // Fallback: try GitHub API
+            try {
+                const { content } = await gh.getFile('data/recommendations.json');
+                const d = JSON.parse(content);
+                recommendations = (d.recommendations || []).filter(r => r.is_active !== false);
+            } catch { recommendations = []; }
+        }
+
+        if (retRes.status === 'fulfilled' && retRes.value.ok) {
+            returnsData = await retRes.value.json();
+        } else {
+            try {
+                const { content } = await gh.getFile('data/returns.json');
+                returnsData = JSON.parse(content);
+            } catch { returnsData = {}; }
+        }
+
+        if (blogRes.status === 'fulfilled' && blogRes.value.ok) {
+            const d = await blogRes.value.json();
+            bloggersData = d.bloggers || [];
+        } else {
+            try {
+                const { content } = await gh.getFile('data/bloggers.json');
+                bloggersData = (JSON.parse(content)).bloggers || [];
+            } catch { bloggersData = []; }
+        }
+
+        // Merge returns into recommendations
+        recommendations.forEach(rec => {
+            const ret = returnsData[String(rec.id)];
+            rec.latest_return = ret ? ret.latest_return : null;
+            rec.latest_price = ret ? ret.latest_price : null;
+        });
+
+        renderDashboard();
+        renderBloggers();
+    } catch (e) {
+        console.error('加载数据失败:', e);
+        document.getElementById('recList').innerHTML =
+            `<div class="empty-state"><div class="empty-icon">&#9888;</div><div class="empty-text">加载失败: ${e.message}</div></div>`;
+    }
+}
+
+// ============================================================
+//  Dashboard Rendering
+// ============================================================
+function renderDashboard() {
+    renderStats();
+    renderRecList();
+}
+
+function renderStats() {
+    const total = recommendations.length;
+    const withRet = recommendations.filter(r => r.latest_return !== null);
+    const wins = withRet.filter(r => r.latest_return > 0).length;
+    const avgRet = withRet.length > 0
+        ? (withRet.reduce((s, r) => s + (r.latest_return || 0), 0) / withRet.length).toFixed(1) : null;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statWinRate').textContent = withRet.length > 0
+        ? (wins / withRet.length * 100).toFixed(0) + '%' : '—';
+
+    const avgEl = document.getElementById('statAvgReturn');
+    if (avgRet !== null) {
+        avgEl.textContent = (avgRet > 0 ? '+' : '') + avgRet + '%';
+        avgEl.style.color = avgRet > 0 ? 'var(--gain)' : avgRet < 0 ? 'var(--loss)' : 'var(--text-muted)';
+    } else {
+        avgEl.textContent = '—';
+        avgEl.style.color = 'var(--text-muted)';
+    }
+}
+
+function renderRecList() {
+    const list = document.getElementById('recList');
+    if (recommendations.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="empty-icon">&#128200;</div><div class="empty-text">还没有追踪记录<br>点击右下角 + 添加第一条推荐</div></div>`;
+        return;
+    }
+    let sorted = [...recommendations];
+    if (sortByReturn) sorted.sort((a, b) => (b.latest_return || -999) - (a.latest_return || -999));
+
+    list.innerHTML = sorted.map(rec => {
+        const ret = rec.latest_return;
+        const cls = ret > 0 ? 'positive' : ret < 0 ? 'negative' : 'neutral';
+        const retStr = ret !== null ? (ret > 0 ? '+' : '') + ret.toFixed(2) + '%' : '—';
+        return `
+        <div class="rec-card ${cls} animate-in" onclick="openDetail(${rec.id})">
+            <div class="rec-top">
+                <div class="rec-stock-info">
+                    <h3>${esc(rec.stock_name || rec.stock_code)}</h3>
+                    <div class="rec-stock-code">${esc(rec.stock_code)}</div>
+                </div>
+                <div class="rec-return">
+                    <div class="rec-return-value ${cls}">${retStr}</div>
+                    <div class="rec-return-label">累计收益</div>
+                </div>
+            </div>
+            <div class="rec-bottom">
+                <div class="rec-meta">
+                    <span class="rec-meta-item"><span class="rec-meta-icon">&#128100;</span> ${esc(rec.blogger)}</span>
+                    ${rec.channel ? `<span class="rec-meta-item"><span class="rec-meta-icon">&#128226;</span> ${esc(rec.channel)}</span>` : ''}
+                </div>
+                <span class="rec-date">${rec.recommend_date}</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ============================================================
+//  Blogger Rendering
+// ============================================================
+function renderBloggers() {
+    const container = document.getElementById('bloggerList');
+    if (!bloggersData.length) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon">&#127942;</div><div class="empty-text">暂无博主数据<br>添加推荐记录后将自动统计</div></div>`;
+        return;
+    }
+    container.innerHTML = bloggersData.map((b, i) => {
+        const avgColor = b.avg_return > 0 ? 'var(--gain)' : b.avg_return < 0 ? 'var(--loss)' : 'var(--text-muted)';
+        const rankCls = i < 3 ? `top-${i+1}` : '';
+        return `
+        <div class="blogger-card animate-in" style="animation-delay:${i*0.05}s">
+            <div class="blogger-top">
+                <div class="blogger-info">
+                    <div class="blogger-rank ${rankCls}">${i+1}</div>
+                    <div>
+                        <div class="blogger-name">${esc(b.blogger)}</div>
+                        ${b.channel ? `<div class="blogger-channel">${esc(b.channel)}</div>` : ''}
+                    </div>
+                </div>
+                <div class="blogger-avg-return" style="color:${avgColor}">${b.avg_return > 0 ? '+' : ''}${b.avg_return.toFixed(1)}%</div>
+            </div>
+            <div class="blogger-stats">
+                <div class="blogger-stat"><div class="blogger-stat-value">${b.total_count}</div><div class="blogger-stat-label">推荐数</div></div>
+                <div class="blogger-stat"><div class="blogger-stat-value" style="color:var(--gain)">${b.win_rate}%</div><div class="blogger-stat-label">胜率</div></div>
+                <div class="blogger-stat"><div class="blogger-stat-value" style="color:var(--gain)">+${(b.max_return||0).toFixed(1)}%</div><div class="blogger-stat-label">最大盈</div></div>
+                <div class="blogger-stat"><div class="blogger-stat-value" style="color:var(--loss)">${(b.min_return||0).toFixed(1)}%</div><div class="blogger-stat-label">最大亏</div></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ============================================================
+//  Add Recommendation (via GitHub API)
+// ============================================================
+function openAddModal() {
+    if (!isConfigured()) { showToast('请先完成 GitHub 配置', 'error'); switchTab('settings'); return; }
+    const o = document.getElementById('addOverlay'), m = document.getElementById('addModal');
+    o.style.display = 'block';
+    requestAnimationFrame(() => { o.classList.add('show'); m.classList.add('show'); });
+    const d = document.querySelector('[name="recommend_date"]');
+    if (!d.value) d.value = new Date().toISOString().split('T')[0];
+}
+
+function closeAddModal() {
+    document.getElementById('addOverlay').classList.remove('show');
+    document.getElementById('addModal').classList.remove('show');
+    setTimeout(() => document.getElementById('addOverlay').style.display = 'none', 350);
+}
+
+async function submitAdd(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = '提交中...';
+
+    const fd = new FormData(document.getElementById('addForm'));
+    const stockCode = normalizeCode(fd.get('stock_code'));
+
+    try {
+        // 1. Read current recommendations
+        const { content: raw, sha } = await gh.getFile('data/recommendations.json');
+        const data = JSON.parse(raw);
+
+        // 2. Build new entry
+        const newRec = {
+            id: data.next_id,
+            stock_code: stockCode,
+            stock_name: fd.get('stock_name') || stockCode,
+            blogger: fd.get('blogger'),
+            channel: fd.get('channel') || '',
+            recommend_date: fd.get('recommend_date') || new Date().toISOString().split('T')[0],
+            recommend_price: parseFloat(fd.get('recommend_price')) || 0,
+            note: fd.get('note') || '',
+            is_active: true,
+            created_at: new Date().toISOString()
+        };
+        data.recommendations.push(newRec);
+        data.next_id++;
+
+        // 3. Commit to GitHub
+        await gh.updateFile(
+            'data/recommendations.json',
+            JSON.stringify(data, null, 2),
+            sha,
+            `添加推荐: ${newRec.stock_code} by ${newRec.blogger}`
+        );
+
+        // 4. Trigger workflow
+        try { await gh.triggerWorkflow('update_prices.yml'); } catch (we) { console.warn('触发工作流:', we); }
+
+        // 5. Optimistic UI update
+        newRec.latest_return = null;
+        newRec.latest_price = null;
+        recommendations.push(newRec);
+        renderDashboard();
+
+        document.getElementById('addForm').reset();
+        closeAddModal();
+        showToast(`已添加 ${newRec.stock_code}，行情数据将在几分钟内更新`);
+    } catch (err) {
+        showToast('添加失败: ' + err.message, 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = '添加追踪';
+    }
+}
+
+// ============================================================
+//  Detail Modal
+// ============================================================
+function openDetail(id) {
+    currentDetailId = id;
+    const rec = recommendations.find(r => r.id === id);
+    if (!rec) return;
+
+    const o = document.getElementById('detailOverlay'), m = document.getElementById('detailModal');
+    o.style.display = 'block';
+    requestAnimationFrame(() => { o.classList.add('show'); m.classList.add('show'); });
+
+    document.getElementById('detailName').textContent = rec.stock_name || rec.stock_code;
+    document.getElementById('detailCode').textContent = rec.stock_code;
+    document.getElementById('detailBlogger').textContent = rec.blogger;
+    document.getElementById('detailChannel').textContent = rec.channel || '—';
+    document.getElementById('detailDate').textContent = rec.recommend_date;
+    document.getElementById('detailPrice').textContent = rec.recommend_price ? `¥${rec.recommend_price.toFixed(2)}` : '自动获取';
+
+    const ret = rec.latest_return;
+    const badge = document.getElementById('detailReturnBadge');
+    if (ret !== null) {
+        badge.textContent = (ret > 0 ? '+' : '') + ret.toFixed(2) + '%';
+        badge.className = `modal-return-badge ${ret >= 0 ? 'positive' : 'negative'}`;
+    } else {
+        badge.textContent = '—';
+        badge.className = 'modal-return-badge';
+    }
+
+    const retInfo = returnsData[String(id)];
+    const history = retInfo ? retInfo.history || [] : [];
+    document.getElementById('detailLatestPrice').textContent = retInfo && retInfo.latest_price ? `最新 ¥${retInfo.latest_price.toFixed(2)}` : '';
+
+    renderChart(history);
+}
+
+function closeDetailModal() {
+    document.getElementById('detailOverlay').classList.remove('show');
+    document.getElementById('detailModal').classList.remove('show');
+    setTimeout(() => document.getElementById('detailOverlay').style.display = 'none', 350);
+}
+
+function renderChart(history) {
+    const canvas = document.getElementById('returnChart');
+    if (chartInstance) chartInstance.destroy();
+    if (!history || !history.length) return;
+
+    const labels = history.map(r => { const d = r.date.split('-'); return `${d[1]}/${d[2]}`; });
+    const pts = history.map(r => r.return_pct);
+    const positive = pts[pts.length - 1] >= 0;
+
+    const ctx = canvas.getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 0, 180);
+    grad.addColorStop(0, positive ? 'rgba(46,204,139,0.2)' : 'rgba(255,92,114,0.2)');
+    grad.addColorStop(1, positive ? 'rgba(46,204,139,0)' : 'rgba(255,92,114,0)');
+
+    chartInstance = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                data: pts,
+                borderColor: positive ? '#2ecc8b' : '#ff5c72',
+                borderWidth: 2, backgroundColor: grad, fill: true,
+                pointRadius: 0, pointHoverRadius: 4,
+                pointHoverBackgroundColor: positive ? '#2ecc8b' : '#ff5c72',
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1e2130', borderColor: '#262a38', borderWidth: 1,
+                    titleFont: { family: 'DM Mono', size: 11 },
+                    bodyFont: { family: 'DM Mono', size: 13 },
+                    callbacks: { label: ctx => (ctx.raw > 0 ? '+' : '') + ctx.raw.toFixed(2) + '%' }
+                }
+            },
+            scales: {
+                x: { grid: { color: 'rgba(38,42,56,0.5)', drawBorder: false }, ticks: { color: '#565a6e', font: { family: 'DM Mono', size: 10 }, maxTicksLimit: 6 } },
+                y: { grid: { color: 'rgba(38,42,56,0.5)', drawBorder: false }, ticks: { color: '#565a6e', font: { family: 'DM Mono', size: 10 }, callback: v => v.toFixed(1) + '%' } }
+            }
+        }
+    });
+}
+
+// ============================================================
+//  Deactivate
+// ============================================================
+async function deactivateRec() {
+    if (!currentDetailId || !isConfigured()) return;
+    if (!confirm('确定停止追踪该股票？')) return;
+
+    try {
+        const { content: raw, sha } = await gh.getFile('data/recommendations.json');
+        const data = JSON.parse(raw);
+        const rec = data.recommendations.find(r => r.id === currentDetailId);
+        if (rec) rec.is_active = false;
+
+        await gh.updateFile('data/recommendations.json', JSON.stringify(data, null, 2), sha, `停止追踪: ${rec ? rec.stock_code : currentDetailId}`);
+
+        recommendations = recommendations.filter(r => r.id !== currentDetailId);
+        renderDashboard();
+        closeDetailModal();
+        showToast('已停止追踪');
+    } catch (e) {
+        showToast('操作失败: ' + e.message, 'error');
+    }
+}
+
+// ============================================================
+//  Refresh (trigger workflow)
+// ============================================================
+async function triggerRefresh() {
+    if (!isConfigured()) { showToast('请先完成配置', 'error'); return; }
+    const btn = document.getElementById('btnRefresh');
+    btn.classList.add('refreshing');
+    try {
+        await gh.triggerWorkflow('update_prices.yml');
+        showToast('已触发行情更新，数据将在几分钟内刷新');
+        // 延迟一段时间后重新加载数据
+        setTimeout(() => loadData(), 3000);
+    } catch (e) {
+        showToast('触发失败: ' + e.message, 'error');
+    } finally {
+        setTimeout(() => btn.classList.remove('refreshing'), 1500);
+    }
+}
+
+// ============================================================
+//  UI Helpers
+// ============================================================
+function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === `section-${tab}`));
+    document.getElementById('fabBtn').style.display = tab === 'settings' ? 'none' : '';
+}
+
+function toggleSort() {
+    sortByReturn = !sortByReturn;
+    document.getElementById('sortBtn').textContent = sortByReturn ? '按时间排序' : '按收益排序';
+    renderRecList();
+}
+
+function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+}
+
+function normalizeCode(code) {
+    code = code.trim().toUpperCase();
+    ['SH', 'SZ', 'BJ'].forEach(p => code = code.replace(p, ''));
+    ['.SH', '.SZ', '.BJ'].forEach(s => code = code.replace(s, ''));
+    code = code.replace(/\./g, '');
+    return code.padStart(6, '0');
+}
+
+// ============================================================
+//  PWA Registration
+// ============================================================
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW registration failed:', e));
+}
+
+// ============================================================
+//  Init
+// ============================================================
+document.addEventListener('DOMContentLoaded', async () => {
+    loadConfig();
+    document.getElementById('cfgRepo').value = config.owner && config.repo ? `${config.owner}/${config.repo}` : '';
+    document.getElementById('cfgToken').value = config.token || '';
+
+    if (isConfigured()) {
+        gh = new GitHub(config.token, config.owner, config.repo);
+        updateConnStatus(true);
+        await loadData();
+    } else {
+        switchTab('settings');
+    }
+});
+</script>
+</body>
+</html>
