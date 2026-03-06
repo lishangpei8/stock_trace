@@ -235,6 +235,53 @@
         .btn-submit:active { transform: scale(0.97); opacity: 0.9; }
         .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
+        /* Search box */
+        .search-row { display: flex; gap: 8px; }
+        .search-row .form-input { flex: 1; }
+        .btn-search {
+            flex-shrink: 0; padding: 0 18px; background: var(--accent); color: #fff;
+            border: none; border-radius: var(--radius-sm); font-family: var(--font-sans);
+            font-size: 14px; font-weight: 600; cursor: pointer; transition: all var(--transition);
+        }
+        .btn-search:active { transform: scale(0.95); opacity: 0.85; }
+        .btn-search:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Search results */
+        .search-results {
+            max-height: 200px; overflow-y: auto; margin-top: 8px; border-radius: var(--radius-sm);
+            border: 1px solid var(--border); display: none;
+        }
+        .search-results.show { display: block; }
+        .search-result-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 11px 14px; border-bottom: 1px solid var(--border); cursor: pointer;
+            transition: background var(--transition);
+        }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:active { background: var(--bg-card-hover); }
+        .search-result-name { font-size: 14px; font-weight: 500; }
+        .search-result-code { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+        .search-result-price { font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary); }
+        .search-no-result { padding: 16px; text-align: center; font-size: 13px; color: var(--text-muted); }
+
+        /* Selected stock chip */
+        .selected-stock {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--accent-glow); border: 1px solid rgba(108,140,255,0.3);
+            border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 16px;
+        }
+        .selected-stock-info { display: flex; align-items: center; gap: 10px; }
+        .selected-stock-name { font-size: 15px; font-weight: 600; }
+        .selected-stock-code { font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+        .selected-stock-price { font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary); }
+        .selected-stock-remove {
+            width: 24px; height: 24px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.08); color: var(--text-muted);
+            font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all var(--transition);
+        }
+        .selected-stock-remove:active { background: rgba(255,92,114,0.2); color: var(--loss); }
+
         .fab {
             position: fixed; bottom: 24px; right: calc(50% - 210px);
             width: 52px; height: 52px; background: linear-gradient(135deg, var(--accent), #a78bfa);
@@ -389,17 +436,21 @@
     <div class="form-section">
         <div class="form-title">添加推荐记录</div>
         <form id="addForm" onsubmit="submitAdd(event)">
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">股票代码</label>
-                    <input type="text" class="form-input mono" name="stock_code" placeholder="600519" maxlength="10" inputmode="numeric">
+            <!-- Stock search -->
+            <div class="form-group" id="stockSearchBox">
+                <label class="form-label">搜索股票 *</label>
+                <div class="search-row">
+                    <input type="text" class="form-input" id="stockSearchInput" placeholder="输入代码、名称或拼音缩写" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();doStockSearch();}">
+                    <button type="button" class="btn-search" id="btnSearch" onclick="doStockSearch()">搜索</button>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">股票名称</label>
-                    <input type="text" class="form-input" name="stock_name" placeholder="贵州茅台">
-                </div>
+                <div class="search-results" id="searchResults"></div>
             </div>
-            <div id="formStockHint" style="font-size:11px;color:var(--text-muted);margin:-10px 0 14px 2px;display:none"></div>
+            <!-- Selected stock display -->
+            <div id="selectedStockChip" style="display:none"></div>
+            <!-- Hidden fields for selected stock -->
+            <input type="hidden" name="stock_code" id="selStockCode">
+            <input type="hidden" name="stock_name" id="selStockName">
+
             <div class="form-group">
                 <label class="form-label">推荐博主 *</label>
                 <input type="text" class="form-input" name="blogger" placeholder="博主名称" required>
@@ -469,6 +520,8 @@ let gh = null;             // GitHub client instance
 let recommendations = [];  // merged rec list
 let returnsData = {};      // { rec_id: { latest_return, history, ... } }
 let bloggersData = [];
+let stockList = [];        // [{c,n,p,v}, ...] 全量A股列表
+let selectedStock = null;  // { code, name, price } 当前选中的股票
 let sortByReturn = false;
 let currentDetailId = null;
 let chartInstance = null;
@@ -746,6 +799,124 @@ function renderBloggers() {
 }
 
 // ============================================================
+//  Stock Search (local stock_list.json)
+// ============================================================
+async function loadStockList() {
+    if (stockList.length > 0) return;
+    try {
+        const base = isConfigured() ? `https://${config.owner}.github.io/${config.repo}` : '.';
+        const res = await fetch(`${base}/data/stock_list.json?t=${Date.now()}`);
+        if (res.ok) {
+            stockList = await res.json();
+            if (!Array.isArray(stockList)) stockList = [];
+        }
+    } catch (e) {
+        console.warn('加载股票列表失败:', e);
+    }
+    // Fallback: try GitHub API
+    if (stockList.length === 0 && gh) {
+        try {
+            const { content } = await gh.getFile('data/stock_list.json');
+            stockList = JSON.parse(content);
+            if (!Array.isArray(stockList)) stockList = [];
+        } catch {}
+    }
+}
+
+function doStockSearch() {
+    const input = document.getElementById('stockSearchInput');
+    const query = input.value.trim();
+    if (!query) { showToast('请输入搜索内容', 'error'); return; }
+
+    if (stockList.length === 0) {
+        showToast('股票列表尚未加载，请刷新行情后再试', 'error');
+        return;
+    }
+
+    const q = query.toUpperCase();
+    const results = stockList.filter(s => {
+        // 代码匹配（前缀）
+        if (s.c.startsWith(q)) return true;
+        // 名称匹配（包含）
+        if (s.n.includes(query)) return true;
+        // 拼音缩写匹配（前缀）
+        if (s.p && s.p.startsWith(q)) return true;
+        return false;
+    }).slice(0, 20); // 最多显示20条
+
+    renderSearchResults(results, query);
+}
+
+function renderSearchResults(results, query) {
+    const container = document.getElementById('searchResults');
+    if (results.length === 0) {
+        container.innerHTML = `<div class="search-no-result">未找到 "${esc(query)}" 相关的股票</div>`;
+        container.classList.add('show');
+        return;
+    }
+    if (results.length === 1) {
+        // 唯一匹配，直接选中
+        selectStock(results[0].c, results[0].n, results[0].v);
+        container.classList.remove('show');
+        return;
+    }
+    // 多条结果，让用户选择
+    container.innerHTML = results.map((s, idx) =>
+        `<div class="search-result-item" data-idx="${idx}" onclick="pickSearchResult(${idx})">
+            <div>
+                <div class="search-result-name">${esc(s.n)}</div>
+                <div class="search-result-code">${s.c}${s.p ? ' · ' + s.p : ''}</div>
+            </div>
+            ${s.v ? `<div class="search-result-price">&#165;${s.v.toFixed(2)}</div>` : ''}
+        </div>`
+    ).join('');
+    container.classList.add('show');
+    // Store results for picking
+    container._results = results;
+}
+
+function pickSearchResult(idx) {
+    const container = document.getElementById('searchResults');
+    const s = container._results[idx];
+    if (s) selectStock(s.c, s.n, s.v || 0);
+}
+
+function selectStock(code, name, price) {
+    selectedStock = { code, name, price: price || 0 };
+    document.getElementById('selStockCode').value = code;
+    document.getElementById('selStockName').value = name;
+
+    // Show chip, hide search
+    document.getElementById('stockSearchBox').style.display = 'none';
+    const chip = document.getElementById('selectedStockChip');
+    chip.innerHTML = `
+        <div class="selected-stock">
+            <div class="selected-stock-info">
+                <div>
+                    <div class="selected-stock-name">${esc(name)}</div>
+                    <div class="selected-stock-code">${code}</div>
+                </div>
+                ${price ? `<div class="selected-stock-price">&#165;${price.toFixed(2)}</div>` : ''}
+            </div>
+            <button type="button" class="selected-stock-remove" onclick="clearSelectedStock()" title="重新选择">&#10005;</button>
+        </div>`;
+    chip.style.display = 'block';
+
+    // Clear search
+    document.getElementById('searchResults').classList.remove('show');
+    document.getElementById('stockSearchInput').value = '';
+}
+
+function clearSelectedStock() {
+    selectedStock = null;
+    document.getElementById('selStockCode').value = '';
+    document.getElementById('selStockName').value = '';
+    document.getElementById('selectedStockChip').style.display = 'none';
+    document.getElementById('stockSearchBox').style.display = '';
+    document.getElementById('stockSearchInput').focus();
+}
+
+// ============================================================
 //  Add Recommendation (via GitHub API)
 // ============================================================
 function openAddModal() {
@@ -755,6 +926,9 @@ function openAddModal() {
     requestAnimationFrame(() => { o.classList.add('show'); m.classList.add('show'); });
     const d = document.querySelector('[name="recommend_date"]');
     if (!d.value) d.value = new Date().toISOString().split('T')[0];
+    // Reset stock selection state
+    clearSelectedStock();
+    loadStockList();
 }
 
 function closeAddModal() {
@@ -765,26 +939,16 @@ function closeAddModal() {
 
 async function submitAdd(e) {
     e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    const fd = new FormData(document.getElementById('addForm'));
 
-    const rawCode = (fd.get('stock_code') || '').trim();
-    const rawName = (fd.get('stock_name') || '').trim();
-
-    // 校验：代码和名称至少填一个
-    if (!rawCode && !rawName) {
-        showToast('请至少填写股票代码或名称', 'error');
+    if (!selectedStock) {
+        showToast('请先搜索并选择一只股票', 'error');
         return;
     }
 
+    const btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.textContent = '提交中...';
 
-    // 判断用户输入的是代码还是名称
-    const isCode = rawCode && /^\d{4,6}$/.test(rawCode.replace(/[A-Za-z.]/g, ''));
-    const stockCode = isCode ? normalizeCode(rawCode) : '';
-    const stockName = rawName || (isCode ? '' : '');
-    // 如果只填了名称没填代码，search_name 字段留给 Action 解析
-    const searchName = (!stockCode && rawName) ? rawName : '';
+    const fd = new FormData(document.getElementById('addForm'));
 
     try {
         // 1. Read current recommendations
@@ -794,9 +958,8 @@ async function submitAdd(e) {
         // 2. Build new entry
         const newRec = {
             id: data.next_id,
-            stock_code: stockCode,
-            stock_name: stockName || stockCode,
-            search_name: searchName,
+            stock_code: selectedStock.code,
+            stock_name: selectedStock.name,
             blogger: fd.get('blogger'),
             channel: fd.get('channel') || '',
             recommend_date: fd.get('recommend_date') || new Date().toISOString().split('T')[0],
@@ -809,12 +972,11 @@ async function submitAdd(e) {
         data.next_id++;
 
         // 3. Commit to GitHub
-        const label = stockCode || rawName;
         await gh.updateFile(
             'data/recommendations.json',
             JSON.stringify(data, null, 2),
             sha,
-            `添加推荐: ${label} by ${newRec.blogger}`
+            `添加推荐: ${newRec.stock_name}(${newRec.stock_code}) by ${newRec.blogger}`
         );
 
         // 4. Trigger workflow
@@ -822,15 +984,16 @@ async function submitAdd(e) {
 
         // 5. Optimistic UI update
         newRec.latest_return = null;
-        newRec.latest_price = null;
+        newRec.latest_price = selectedStock.price || null;
         recommendations.push(newRec);
         renderDashboard();
 
         document.getElementById('addForm').reset();
+        clearSelectedStock();
         closeAddModal();
-        showToast(`已添加 ${label}，行情数据将在几分钟内更新`);
+        showToast(`已添加 ${newRec.stock_name}，行情数据将在几分钟内更新`);
 
-        // 6. 轮询等待 Action 更新数据
+        // 6. Poll for updated data
         startPollingForUpdate();
     } catch (err) {
         showToast('添加失败: ' + err.message, 'error');
@@ -839,21 +1002,16 @@ async function submitAdd(e) {
     }
 }
 
-// 添加后轮询刷新数据（等 Action 跑完）
+// Poll after adding to pick up Action-generated data
 let pollTimer = null;
 function startPollingForUpdate() {
     if (pollTimer) clearInterval(pollTimer);
     let attempts = 0;
     pollTimer = setInterval(async () => {
         attempts++;
-        if (attempts > 10) { clearInterval(pollTimer); pollTimer = null; return; }
-        try {
-            await loadData();
-            // 检查是否有新数据（latest_price 不为空说明 Action 已更新）
-            const hasNewPrices = recommendations.some(r => r.latest_price && !returnsData._polled);
-            if (attempts >= 3) { clearInterval(pollTimer); pollTimer = null; }
-        } catch {}
-    }, 30000); // 每30秒检查一次
+        if (attempts > 8) { clearInterval(pollTimer); pollTimer = null; return; }
+        try { await loadData(); } catch {}
+    }, 30000);
 }
 
 // ============================================================

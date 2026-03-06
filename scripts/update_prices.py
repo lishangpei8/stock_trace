@@ -10,6 +10,7 @@ from datetime import datetime
 
 import akshare as ak
 import pandas as pd
+from pypinyin import pinyin, Style
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -322,5 +323,38 @@ def compute_blogger_stats(recs_data, returns_data):
     return bloggers
 
 
+# ========== 股票列表生成（供前端搜索） ==========
+
+def get_pinyin_abbr(name: str) -> str:
+    """获取中文名称的拼音首字母缩写，如 '贵州茅台' -> 'GZMT'"""
+    try:
+        return "".join([p[0][0].upper() for p in pinyin(name, style=Style.FIRST_LETTER)])
+    except Exception:
+        return ""
+
+
+def generate_stock_list():
+    """生成 A 股全量股票列表 JSON（含拼音缩写）供前端搜索"""
+    logger.info("===== 生成股票列表 stock_list.json =====")
+    df = get_spot_df()
+    if df is None or df.empty:
+        logger.warning("无法获取行情数据，跳过股票列表生成")
+        return
+
+    stock_list = []
+    for _, row in df.iterrows():
+        code = str(row.get("代码", ""))
+        name = str(row.get("名称", ""))
+        price = float(row.get("最新价", 0)) if row.get("最新价") else 0
+        if not code or not name:
+            continue
+        py = get_pinyin_abbr(name)
+        stock_list.append({"c": code, "n": name, "p": py, "v": round(price, 2)})
+
+    save_json("stock_list.json", stock_list)
+    logger.info(f"股票列表已生成: {len(stock_list)} 只")
+
+
 if __name__ == "__main__":
     main()
+    generate_stock_list()
