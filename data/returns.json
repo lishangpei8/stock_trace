@@ -1,1 +1,14 @@
-{}
+{
+  "1": {
+    "latest_price": 32.23,
+    "latest_return": 0.0,
+    "latest_date": "2026-03-06",
+    "history": [
+      {
+        "date": "2026-03-06",
+        "price": 32.23,
+        "return_pct": 0.0
+      }
+    ]
+  }
+}
