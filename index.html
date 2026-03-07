@@ -799,52 +799,92 @@ function renderBloggers() {
 }
 
 // ============================================================
-//  Stock Search (local stock_list.json)
+//  Stock Search (在线 API + 本地 stock_list.json 双重搜索)
 // ============================================================
+
+// 后台加载本地股票列表（可选增强，非必需）
 async function loadStockList() {
     if (stockList.length > 0) return;
     try {
         const base = isConfigured() ? `https://${config.owner}.github.io/${config.repo}` : '.';
         const res = await fetch(`${base}/data/stock_list.json?t=${Date.now()}`);
         if (res.ok) {
-            stockList = await res.json();
-            if (!Array.isArray(stockList)) stockList = [];
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) stockList = data;
         }
-    } catch (e) {
-        console.warn('加载股票列表失败:', e);
-    }
-    // Fallback: try GitHub API
-    if (stockList.length === 0 && gh) {
-        try {
-            const { content } = await gh.getFile('data/stock_list.json');
-            stockList = JSON.parse(content);
-            if (!Array.isArray(stockList)) stockList = [];
-        } catch {}
-    }
+    } catch (e) { console.warn('加载本地股票列表:', e); }
 }
 
-function doStockSearch() {
+// 在线搜索：腾讯证券 smartbox API (通过 script 标签绕过 CORS)
+function searchStockOnline(query) {
+    return new Promise((resolve) => {
+        const timer = setTimeout(() => { cleanup(); resolve([]); }, 5000);
+
+        // 清理旧的搜索脚本
+        const old = document.getElementById('_qs_script');
+        if (old) old.remove();
+        window.v_hint = undefined;
+
+        function cleanup() { clearTimeout(timer); }
+
+        const script = document.createElement('script');
+        script.id = '_qs_script';
+        script.src = `https://smartbox.gtimg.cn/s3/?v=2&q=${encodeURIComponent(query)}&t=all&c=1`;
+
+        script.onload = () => {
+            cleanup();
+            try {
+                const hint = window.v_hint || '';
+                if (!hint) { resolve([]); return; }
+                const results = hint.split('^').filter(Boolean).map(item => {
+                    const p = item.split('~');
+                    return { c: p[1], n: p[2], p: (p[3] || '').toUpperCase(), type: p[4] };
+                }).filter(s => s.type === 'GP-A' && s.c && s.n);
+                resolve(results);
+            } catch (e) { resolve([]); }
+        };
+        script.onerror = () => { cleanup(); resolve([]); };
+        document.head.appendChild(script);
+    });
+}
+
+// 本地搜索：从 stock_list.json 搜索（作为在线 API 的后备）
+function searchStockLocal(query) {
+    if (!stockList || stockList.length === 0) return [];
+    const q = query.toUpperCase();
+    return stockList.filter(s => {
+        if (s.c.startsWith(q)) return true;
+        if (s.n.includes(query)) return true;
+        if (s.p && s.p.startsWith(q)) return true;
+        return false;
+    }).slice(0, 20);
+}
+
+async function doStockSearch() {
     const input = document.getElementById('stockSearchInput');
     const query = input.value.trim();
     if (!query) { showToast('请输入搜索内容', 'error'); return; }
 
-    if (stockList.length === 0) {
-        showToast('股票列表尚未加载，请刷新行情后再试', 'error');
-        return;
+    const btn = document.getElementById('btnSearch');
+    btn.disabled = true; btn.textContent = '搜索中';
+
+    try {
+        // 优先在线搜索（支持代码/名称/拼音缩写）
+        let results = await searchStockOnline(query);
+
+        // 在线搜索无结果时，尝试本地列表
+        if (results.length === 0) {
+            results = searchStockLocal(query);
+        }
+
+        renderSearchResults(results, query);
+    } catch (e) {
+        // 在线失败，回退到本地
+        const results = searchStockLocal(query);
+        renderSearchResults(results, query);
+    } finally {
+        btn.disabled = false; btn.textContent = '搜索';
     }
-
-    const q = query.toUpperCase();
-    const results = stockList.filter(s => {
-        // 代码匹配（前缀）
-        if (s.c.startsWith(q)) return true;
-        // 名称匹配（包含）
-        if (s.n.includes(query)) return true;
-        // 拼音缩写匹配（前缀）
-        if (s.p && s.p.startsWith(q)) return true;
-        return false;
-    }).slice(0, 20); // 最多显示20条
-
-    renderSearchResults(results, query);
 }
 
 function renderSearchResults(results, query) {
@@ -856,7 +896,7 @@ function renderSearchResults(results, query) {
     }
     if (results.length === 1) {
         // 唯一匹配，直接选中
-        selectStock(results[0].c, results[0].n, results[0].v);
+        selectStock(results[0].c, results[0].n, 0);
         container.classList.remove('show');
         return;
     }
@@ -867,18 +907,16 @@ function renderSearchResults(results, query) {
                 <div class="search-result-name">${esc(s.n)}</div>
                 <div class="search-result-code">${s.c}${s.p ? ' · ' + s.p : ''}</div>
             </div>
-            ${s.v ? `<div class="search-result-price">&#165;${s.v.toFixed(2)}</div>` : ''}
         </div>`
     ).join('');
     container.classList.add('show');
-    // Store results for picking
     container._results = results;
 }
 
 function pickSearchResult(idx) {
     const container = document.getElementById('searchResults');
     const s = container._results[idx];
-    if (s) selectStock(s.c, s.n, s.v || 0);
+    if (s) selectStock(s.c, s.n, 0);
 }
 
 function selectStock(code, name, price) {
@@ -896,7 +934,6 @@ function selectStock(code, name, price) {
                     <div class="selected-stock-name">${esc(name)}</div>
                     <div class="selected-stock-code">${code}</div>
                 </div>
-                ${price ? `<div class="selected-stock-price">&#165;${price.toFixed(2)}</div>` : ''}
             </div>
             <button type="button" class="selected-stock-remove" onclick="clearSelectedStock()" title="重新选择">&#10005;</button>
         </div>`;
@@ -928,7 +965,10 @@ function openAddModal() {
     if (!d.value) d.value = new Date().toISOString().split('T')[0];
     // Reset stock selection state
     clearSelectedStock();
+    // 后台预加载本地股票列表（非阻塞，可选增强）
     loadStockList();
+    // 聚焦搜索框
+    setTimeout(() => document.getElementById('stockSearchInput').focus(), 400);
 }
 
 function closeAddModal() {
