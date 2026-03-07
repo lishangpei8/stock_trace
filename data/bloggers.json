@@ -9,6 +9,16 @@
       "avg_return": 0.0,
       "max_return": 0.0,
       "min_return": 0.0
+    },
+    {
+      "blogger": "啊啊啊",
+      "channel": "",
+      "total_count": 1,
+      "win_count": 0,
+      "win_rate": 0,
+      "avg_return": 0,
+      "max_return": 0,
+      "min_return": 0
     }
   ]
 }
