@@ -11,8 +11,18 @@
       "min_return": 1.64
     },
     {
-      "blogger": "泰哥说市",
-      "channel": "抖音",
+      "blogger": "修身养性",
+      "channel": "小红书",
+      "total_count": 1,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": 0.0,
+      "max_return": 0.0,
+      "min_return": 0.0
+    },
+    {
+      "blogger": "修身养生",
+      "channel": "小红书",
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
