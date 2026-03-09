@@ -54,5 +54,17 @@
         "return_pct": 0.0
       }
     ]
+  },
+  "6": {
+    "latest_price": 17.94,
+    "latest_return": 0.0,
+    "latest_date": "2026-03-09",
+    "history": [
+      {
+        "date": "2026-03-09",
+        "price": 17.94,
+        "return_pct": 0.0
+      }
+    ]
   }
 }
