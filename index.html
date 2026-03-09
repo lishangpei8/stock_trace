@@ -138,7 +138,8 @@
         .rec-date { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
 
         /* ===== Blogger Cards ===== */
-        .blogger-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; }
+        .blogger-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; cursor: pointer; transition: all var(--transition); }
+        .blogger-card:active { transform: scale(0.98); background: var(--bg-card-hover); }
         .blogger-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .blogger-info { display: flex; align-items: center; gap: 12px; }
         .blogger-rank {
@@ -338,6 +339,29 @@
             .stat-card { padding: 10px; }
             .blogger-stats { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* ===== Blogger Detail Modal ===== */
+        .blogger-detail-header { padding: 16px 20px 12px; }
+        .blogger-detail-name { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
+        .blogger-detail-channel { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+        .blogger-detail-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 20px 16px; }
+        .blogger-detail-stat { text-align: center; padding: 10px 4px; background: var(--bg-input); border-radius: var(--radius-xs); }
+        .blogger-detail-stat-value { font-family: var(--font-mono); font-size: 16px; font-weight: 500; }
+        .blogger-detail-stat-label { font-size: 10px; color: var(--text-muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .blogger-rec-list { padding: 0 20px 20px; }
+        .blogger-rec-section-title { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500; }
+        .blogger-rec-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 14px; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); margin-bottom: 8px; position: relative; overflow: hidden;
+        }
+        .blogger-rec-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+        .blogger-rec-item.positive::before { background: var(--gain); }
+        .blogger-rec-item.negative::before { background: var(--loss); }
+        .blogger-rec-item.neutral::before { background: var(--text-muted); }
+        .blogger-rec-item-left h4 { font-size: 14px; font-weight: 600; }
+        .blogger-rec-item-sub { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .blogger-rec-item-return { font-family: var(--font-mono); font-size: 16px; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -509,6 +533,24 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ===== Blogger Detail Modal ===== -->
+<div class="modal-overlay" id="bloggerDetailOverlay" onclick="closeBloggerDetail()"></div>
+<div class="modal" id="bloggerDetailModal">
+    <div class="modal-handle"></div>
+    <div class="blogger-detail-header">
+        <div class="blogger-detail-name" id="bdName">—</div>
+        <div class="blogger-detail-channel" id="bdChannel"></div>
+    </div>
+    <div class="blogger-detail-stats" id="bdStats"></div>
+    <div class="blogger-rec-list">
+        <div class="blogger-rec-section-title">推荐股票</div>
+        <div id="bdRecList"></div>
+    </div>
+    <div class="modal-actions">
+        <button class="btn-modal-action" onclick="closeBloggerDetail()">关闭</button>
+    </div>
+</div>
 
 <script>
 // ============================================================
@@ -777,7 +819,7 @@ function renderBloggers() {
         const avgColor = b.avg_return > 0 ? 'var(--gain)' : b.avg_return < 0 ? 'var(--loss)' : 'var(--text-muted)';
         const rankCls = i < 3 ? `top-${i+1}` : '';
         return `
-        <div class="blogger-card animate-in" style="animation-delay:${i*0.05}s">
+        <div class="blogger-card animate-in" style="animation-delay:${i*0.05}s" onclick="openBloggerDetail('${esc(b.blogger).replace(/'/g,"\\'")}')">
             <div class="blogger-top">
                 <div class="blogger-info">
                     <div class="blogger-rank ${rankCls}">${i+1}</div>
@@ -1168,6 +1210,71 @@ async function deactivateRec() {
 }
 
 // ============================================================
+//  Blogger Detail Modal
+// ============================================================
+function openBloggerDetail(bloggerName) {
+    const b = bloggersData.find(x => x.blogger === bloggerName);
+    if (!b) return;
+
+    const o = document.getElementById('bloggerDetailOverlay'), m = document.getElementById('bloggerDetailModal');
+    o.style.display = 'block';
+    requestAnimationFrame(() => { o.classList.add('show'); m.classList.add('show'); });
+
+    document.getElementById('bdName').textContent = b.blogger;
+    document.getElementById('bdChannel').textContent = b.channel || '';
+
+    const avgColor = b.avg_return > 0 ? 'var(--gain)' : b.avg_return < 0 ? 'var(--loss)' : 'var(--text-muted)';
+    document.getElementById('bdStats').innerHTML = `
+        <div class="blogger-detail-stat">
+            <div class="blogger-detail-stat-value">${b.total_count}</div>
+            <div class="blogger-detail-stat-label">推荐数</div>
+        </div>
+        <div class="blogger-detail-stat">
+            <div class="blogger-detail-stat-value" style="color:var(--gain)">${b.win_rate}%</div>
+            <div class="blogger-detail-stat-label">胜率</div>
+        </div>
+        <div class="blogger-detail-stat">
+            <div class="blogger-detail-stat-value" style="color:${avgColor}">${b.avg_return > 0 ? '+' : ''}${b.avg_return.toFixed(1)}%</div>
+            <div class="blogger-detail-stat-label">均收益</div>
+        </div>
+        <div class="blogger-detail-stat">
+            <div class="blogger-detail-stat-value">${b.win_count}/${b.total_count}</div>
+            <div class="blogger-detail-stat-label">盈/总</div>
+        </div>`;
+
+    // 找出该博主推荐的所有股票
+    const bloggerRecs = recommendations.filter(r => r.blogger === bloggerName);
+    const recListEl = document.getElementById('bdRecList');
+
+    if (bloggerRecs.length === 0) {
+        recListEl.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;font-size:13px">暂无活跃推荐记录</div>';
+        return;
+    }
+
+    recListEl.innerHTML = bloggerRecs.map(rec => {
+        const ret = rec.latest_return;
+        const cls = ret > 0 ? 'positive' : ret < 0 ? 'negative' : 'neutral';
+        const retStr = ret !== null ? (ret > 0 ? '+' : '') + ret.toFixed(2) + '%' : '—';
+        const retColor = ret > 0 ? 'var(--gain)' : ret < 0 ? 'var(--loss)' : 'var(--text-muted)';
+        const priceStr = rec.latest_price ? `¥${rec.latest_price.toFixed(2)}` : '';
+        return `
+        <div class="blogger-rec-item ${cls}">
+            <div class="blogger-rec-item-left">
+                <h4>${esc(rec.stock_name || rec.stock_code)}</h4>
+                <div class="blogger-rec-item-sub">${esc(rec.stock_code)} · ${rec.recommend_date}${priceStr ? ' · ' + priceStr : ''}</div>
+            </div>
+            <div class="blogger-rec-item-return" style="color:${retColor}">${retStr}</div>
+        </div>`;
+    }).join('');
+}
+
+function closeBloggerDetail() {
+    document.getElementById('bloggerDetailOverlay').classList.remove('show');
+    document.getElementById('bloggerDetailModal').classList.remove('show');
+    setTimeout(() => document.getElementById('bloggerDetailOverlay').style.display = 'none', 350);
+}
+
+// ============================================================
 //  Refresh (trigger workflow)
 // ============================================================
 async function triggerRefresh() {
@@ -1223,10 +1330,23 @@ function normalizeCode(code) {
 }
 
 // ============================================================
-//  PWA Registration
+//  PWA Registration (自动检测更新，确保获取最新代码)
 // ============================================================
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW registration failed:', e));
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+        // 每次加载页面时检查 SW 更新
+        reg.update();
+        reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            if (!newWorker) return;
+            newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+                    showToast('发现新版本，即将刷新...');
+                    setTimeout(() => window.location.reload(), 1500);
+                }
+            });
+        });
+    }).catch(e => console.log('SW registration failed:', e));
 }
 
 // ============================================================
