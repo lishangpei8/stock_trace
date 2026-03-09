@@ -4,21 +4,21 @@
       "blogger": "红狼擒牛",
       "channel": "抖音",
       "total_count": 2,
-      "win_count": 1,
-      "win_rate": 50.0,
-      "avg_return": 4.78,
-      "max_return": 9.55,
-      "min_return": 0.0
+      "win_count": 2,
+      "win_rate": 100.0,
+      "avg_return": 5.91,
+      "max_return": 10.17,
+      "min_return": 1.64
     },
     {
       "blogger": "啊啊啊",
       "channel": "",
       "total_count": 1,
       "win_count": 0,
-      "win_rate": 0,
-      "avg_return": 0,
-      "max_return": 0,
-      "min_return": 0
+      "win_rate": 0.0,
+      "avg_return": 0.0,
+      "max_return": 0.0,
+      "min_return": 0.0
     }
   ]
 }
