@@ -10,5 +10,32 @@
         "return_pct": 0.0
       }
     ]
+  },
+  "3": {
+    "latest_price": 14.0,
+    "latest_return": 9.55,
+    "latest_date": "2026-03-09",
+    "history": [
+      {
+        "date": "2026-03-04",
+        "price": 12.78,
+        "return_pct": 0.0
+      },
+      {
+        "date": "2026-03-05",
+        "price": 14.0,
+        "return_pct": 9.55
+      },
+      {
+        "date": "2026-03-06",
+        "price": 13.94,
+        "return_pct": 9.08
+      },
+      {
+        "date": "2026-03-09",
+        "price": 14.0,
+        "return_pct": 9.55
+      }
+    ]
   }
 }
