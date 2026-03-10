@@ -4,51 +4,31 @@
       "blogger": "红狼擒牛",
       "channel": "抖音",
       "total_count": 2,
-      "win_count": 2,
-      "win_rate": 100.0,
-      "avg_return": 5.91,
-      "max_return": 10.17,
-      "min_return": 1.64
-    },
-    {
-      "blogger": "修身养性",
-      "channel": "小红书",
-      "total_count": 1,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": 0.0,
-      "max_return": 0.0,
-      "min_return": 0.0
+      "win_count": 1,
+      "win_rate": 50.0,
+      "avg_return": 4.94,
+      "max_return": 11.03,
+      "min_return": -1.15
     },
     {
       "blogger": "修身养生",
       "channel": "小红书",
       "total_count": 1,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": 0.0,
-      "max_return": 0.0,
-      "min_return": 0.0
+      "win_count": 1,
+      "win_rate": 100.0,
+      "avg_return": 4.53,
+      "max_return": 4.53,
+      "min_return": 4.53
     },
     {
-      "blogger": "九凤盘龙",
-      "channel": "抖音",
+      "blogger": "修身养性",
+      "channel": "小红书",
       "total_count": 1,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": 0.0,
-      "max_return": 0.0,
-      "min_return": 0.0
-    },
-    {
-      "blogger": "擒牛老马",
-      "channel": "抖音",
-      "total_count": 1,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": 0.0,
-      "max_return": 0.0,
-      "min_return": 0.0
+      "win_count": 1,
+      "win_rate": 100.0,
+      "avg_return": 1.97,
+      "max_return": 1.97,
+      "min_return": 1.97
     },
     {
       "blogger": "股海龙行者",
@@ -56,9 +36,29 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": 0.0,
-      "max_return": 0.0,
-      "min_return": 0.0
+      "avg_return": -0.46,
+      "max_return": -0.46,
+      "min_return": -0.46
+    },
+    {
+      "blogger": "擒牛老马",
+      "channel": "抖音",
+      "total_count": 1,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -2.28,
+      "max_return": -2.28,
+      "min_return": -2.28
+    },
+    {
+      "blogger": "九凤盘龙",
+      "channel": "抖音",
+      "total_count": 1,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -2.79,
+      "max_return": -2.79,
+      "min_return": -2.79
     }
   ]
 }
