@@ -267,5 +267,29 @@
         "return_pct": 0.0
       }
     ]
+  },
+  "16": {
+    "latest_price": 42.25,
+    "latest_return": 0.0,
+    "latest_date": "2026-03-12",
+    "history": [
+      {
+        "date": "2026-03-12",
+        "price": 42.25,
+        "return_pct": 0.0
+      }
+    ]
+  },
+  "17": {
+    "latest_price": 40.34,
+    "latest_return": 0.0,
+    "latest_date": "2026-03-12",
+    "history": [
+      {
+        "date": "2026-03-12",
+        "price": 40.34,
+        "return_pct": 0.0
+      }
+    ]
   }
 }
