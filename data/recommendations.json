@@ -1,5 +1,5 @@
 {
-  "next_id": 13,
+  "next_id": 14,
   "recommendations": [
     {
       "id": 1,
@@ -144,6 +144,18 @@
       "note": "",
       "is_active": true,
       "created_at": "2026-03-09T15:14:37.149Z"
+    },
+    {
+      "id": 13,
+      "stock_code": "601868",
+      "stock_name": "中国能建",
+      "blogger": "泰哥说市",
+      "channel": "抖音",
+      "recommend_date": "2026-03-12",
+      "recommend_price": 0,
+      "note": "",
+      "is_active": true,
+      "created_at": "2026-03-12T14:16:12.356Z"
     }
   ]
 }
