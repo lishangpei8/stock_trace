@@ -28,12 +28,12 @@
             --text-muted: #565a6e;
             --accent: #6c8cff;
             --accent-glow: rgba(108, 140, 255, 0.15);
-            --gain: #2ecc8b;
-            --gain-bg: rgba(46, 204, 139, 0.08);
-            --gain-glow: rgba(46, 204, 139, 0.2);
-            --loss: #ff5c72;
-            --loss-bg: rgba(255, 92, 114, 0.08);
-            --loss-glow: rgba(255, 92, 114, 0.2);
+            --gain: #ff5c72;
+            --gain-bg: rgba(255, 92, 114, 0.08);
+            --gain-glow: rgba(255, 92, 114, 0.2);
+            --loss: #2ecc8b;
+            --loss-bg: rgba(46, 204, 139, 0.08);
+            --loss-glow: rgba(46, 204, 139, 0.2);
             --radius: 14px;
             --radius-sm: 8px;
             --radius-xs: 6px;
@@ -582,10 +582,12 @@ class GitHub {
     async request(method, path, body) {
         const res = await fetch(`${this.api}${path}`, {
             method,
+            cache: 'no-store',
             headers: {
                 'Authorization': `Bearer ${this.token}`,
                 'Accept': 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28',
+                'If-None-Match': '',
                 ...(body ? { 'Content-Type': 'application/json' } : {}),
             },
             body: body ? JSON.stringify(body) : undefined,
@@ -877,6 +879,56 @@ function searchStockOnline(query) {
     });
 }
 
+// 获取股票实时价格：腾讯行情 API
+function fetchStockPrice(code) {
+    return new Promise((resolve) => {
+        const timer = setTimeout(() => resolve(0), 4000);
+        const prefix = code.startsWith('6') || code.startsWith('5') || code.startsWith('9') ? 'sh' : 'sz';
+        const cbName = '_qp_cb_' + Date.now();
+        const old = document.getElementById('_qp_script');
+        if (old) old.remove();
+
+        window[cbName] = (data) => {
+            clearTimeout(timer);
+            try {
+                // v_sh600519="1~贵州茅台~600519~1680.00~..."
+                const key = Object.keys(data || {})[0] || '';
+                const val = data[key] || '';
+                // 格式: 编号~名称~代码~当前价~...
+                if (typeof val === 'string') {
+                    const parts = val.split('~');
+                    const price = parseFloat(parts[3]);
+                    resolve(price > 0 ? price : 0);
+                } else {
+                    resolve(0);
+                }
+            } catch { resolve(0); }
+            delete window[cbName];
+        };
+
+        const script = document.createElement('script');
+        script.id = '_qp_script';
+        // 腾讯行情接口返回全局变量 v_shXXXXXX = "..."
+        script.src = `https://qt.gtimg.cn/q=${prefix}${code}`;
+        script.onload = () => {
+            clearTimeout(timer);
+            try {
+                const varName = `v_${prefix}${code}`;
+                const val = window[varName] || '';
+                if (val) {
+                    const parts = val.split('~');
+                    const price = parseFloat(parts[3]);
+                    resolve(price > 0 ? price : 0);
+                } else {
+                    resolve(0);
+                }
+            } catch { resolve(0); }
+        };
+        script.onerror = () => { clearTimeout(timer); resolve(0); };
+        document.head.appendChild(script);
+    });
+}
+
 // 本地搜索：从 stock_list.json 搜索（作为在线 API 的后备）
 function searchStockLocal(query) {
     if (!stockList || stockList.length === 0) return [];
@@ -961,7 +1013,7 @@ function selectStock(code, name, price) {
             <div class="selected-stock-info">
                 <div>
                     <div class="selected-stock-name">${esc(name)}</div>
-                    <div class="selected-stock-code">${code}</div>
+                    <div class="selected-stock-code">${code} <span id="chipPrice" style="color:var(--text-secondary)">获取价格中...</span></div>
                 </div>
             </div>
             <button type="button" class="selected-stock-remove" onclick="clearSelectedStock()" title="重新选择">&#10005;</button>
@@ -971,6 +1023,18 @@ function selectStock(code, name, price) {
     // Clear search
     document.getElementById('searchResults').classList.remove('show');
     document.getElementById('stockSearchInput').value = '';
+
+    // 异步获取实时价格
+    fetchStockPrice(code).then(p => {
+        if (p > 0 && selectedStock && selectedStock.code === code) {
+            selectedStock.price = p;
+            const el = document.getElementById('chipPrice');
+            if (el) el.textContent = `¥${p.toFixed(2)}`;
+        } else {
+            const el = document.getElementById('chipPrice');
+            if (el) el.textContent = '';
+        }
+    });
 }
 
 function clearSelectedStock() {
@@ -1143,8 +1207,8 @@ function renderChart(history) {
 
     const ctx = canvas.getContext('2d');
     const grad = ctx.createLinearGradient(0, 0, 0, 180);
-    grad.addColorStop(0, positive ? 'rgba(46,204,139,0.2)' : 'rgba(255,92,114,0.2)');
-    grad.addColorStop(1, positive ? 'rgba(46,204,139,0)' : 'rgba(255,92,114,0)');
+    grad.addColorStop(0, positive ? 'rgba(255,92,114,0.2)' : 'rgba(46,204,139,0.2)');
+    grad.addColorStop(1, positive ? 'rgba(255,92,114,0)' : 'rgba(46,204,139,0)');
 
     chartInstance = new Chart(canvas, {
         type: 'line',
@@ -1152,10 +1216,10 @@ function renderChart(history) {
             labels,
             datasets: [{
                 data: pts,
-                borderColor: positive ? '#2ecc8b' : '#ff5c72',
+                borderColor: positive ? '#ff5c72' : '#2ecc8b',
                 borderWidth: 2, backgroundColor: grad, fill: true,
                 pointRadius: 0, pointHoverRadius: 4,
-                pointHoverBackgroundColor: positive ? '#2ecc8b' : '#ff5c72',
+                pointHoverBackgroundColor: positive ? '#ff5c72' : '#2ecc8b',
                 tension: 0.3
             }]
         },
