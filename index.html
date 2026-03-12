@@ -678,50 +678,37 @@ function updateConnStatus(ok, msg) {
 }
 
 // ============================================================
-//  Data Loading (from GitHub Pages static files)
+//  Data Loading (直接从 GitHub API 读取，无需等待 Pages 部署)
 // ============================================================
 async function loadData() {
     if (!isConfigured()) return;
 
-    const base = `https://${config.owner}.github.io/${config.repo}`;
-    const ts = Date.now();
-
     try {
-        const [recsRes, retRes, blogRes] = await Promise.allSettled([
-            fetch(`${base}/data/recommendations.json?t=${ts}`),
-            fetch(`${base}/data/returns.json?t=${ts}`),
-            fetch(`${base}/data/bloggers.json?t=${ts}`),
+        // 直接通过 GitHub API 读取数据（commit 后立即可用，无部署延迟）
+        const [recsResult, retResult, blogResult] = await Promise.allSettled([
+            gh.getFile('data/recommendations.json'),
+            gh.getFile('data/returns.json'),
+            gh.getFile('data/bloggers.json'),
         ]);
 
-        if (recsRes.status === 'fulfilled' && recsRes.value.ok) {
-            const d = await recsRes.value.json();
+        if (recsResult.status === 'fulfilled') {
+            const d = JSON.parse(recsResult.value.content);
             recommendations = (d.recommendations || []).filter(r => r.is_active !== false);
         } else {
-            // Fallback: try GitHub API
-            try {
-                const { content } = await gh.getFile('data/recommendations.json');
-                const d = JSON.parse(content);
-                recommendations = (d.recommendations || []).filter(r => r.is_active !== false);
-            } catch { recommendations = []; }
+            recommendations = [];
         }
 
-        if (retRes.status === 'fulfilled' && retRes.value.ok) {
-            returnsData = await retRes.value.json();
+        if (retResult.status === 'fulfilled') {
+            returnsData = JSON.parse(retResult.value.content);
         } else {
-            try {
-                const { content } = await gh.getFile('data/returns.json');
-                returnsData = JSON.parse(content);
-            } catch { returnsData = {}; }
+            returnsData = {};
         }
 
-        if (blogRes.status === 'fulfilled' && blogRes.value.ok) {
-            const d = await blogRes.value.json();
+        if (blogResult.status === 'fulfilled') {
+            const d = JSON.parse(blogResult.value.content);
             bloggersData = d.bloggers || [];
         } else {
-            try {
-                const { content } = await gh.getFile('data/bloggers.json');
-                bloggersData = (JSON.parse(content)).bloggers || [];
-            } catch { bloggersData = []; }
+            bloggersData = [];
         }
 
         // Merge returns into recommendations
@@ -1064,7 +1051,7 @@ async function submitAdd(e) {
         // 4. Trigger workflow
         try { await gh.triggerWorkflow('update_prices.yml'); } catch (we) { console.warn('触发工作流:', we); }
 
-        // 5. Optimistic UI update
+        // 5. Optimistic UI update (立即显示，不等部署)
         newRec.latest_return = null;
         newRec.latest_price = selectedStock.price || null;
         recommendations.push(newRec);
@@ -1073,9 +1060,9 @@ async function submitAdd(e) {
         document.getElementById('addForm').reset();
         clearSelectedStock();
         closeAddModal();
-        showToast(`已添加 ${newRec.stock_name}，行情数据将在几分钟内更新`);
+        showToast(`已添加 ${newRec.stock_name}`);
 
-        // 6. Poll for updated data
+        // 6. 延迟重新加载数据（等 Action 计算收益后刷新）
         startPollingForUpdate();
     } catch (err) {
         showToast('添加失败: ' + err.message, 'error');
@@ -1084,16 +1071,23 @@ async function submitAdd(e) {
     }
 }
 
-// Poll after adding to pick up Action-generated data
+// Poll after adding to pick up Action-generated returns data
 let pollTimer = null;
 function startPollingForUpdate() {
     if (pollTimer) clearInterval(pollTimer);
     let attempts = 0;
     pollTimer = setInterval(async () => {
         attempts++;
-        if (attempts > 8) { clearInterval(pollTimer); pollTimer = null; return; }
-        try { await loadData(); } catch {}
-    }, 30000);
+        if (attempts > 10) { clearInterval(pollTimer); pollTimer = null; return; }
+        try {
+            await loadData();
+            // 检查是否已有收益数据（说明 Action 已完成）
+            const allHaveReturns = recommendations.every(r => r.latest_return !== null);
+            if (allHaveReturns && recommendations.length > 0) {
+                clearInterval(pollTimer); pollTimer = null;
+            }
+        } catch {}
+    }, 20000); // 每20秒轮询一次
 }
 
 // ============================================================
@@ -1283,9 +1277,9 @@ async function triggerRefresh() {
     btn.classList.add('refreshing');
     try {
         await gh.triggerWorkflow('update_prices.yml');
-        showToast('已触发行情更新，数据将在几分钟内刷新');
-        // 延迟一段时间后重新加载数据
-        setTimeout(() => loadData(), 3000);
+        showToast('已触发行情更新');
+        // 先立即从 API 重新加载最新数据
+        await loadData();
     } catch (e) {
         showToast('触发失败: ' + e.message, 'error');
     } finally {
