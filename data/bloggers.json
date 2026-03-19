@@ -41,16 +41,6 @@
       "min_return": -2.62
     },
     {
-      "blogger": "红狼擒牛",
-      "channel": "抖音",
-      "total_count": 2,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": -5.85,
-      "max_return": -2.03,
-      "min_return": -9.68
-    },
-    {
       "blogger": "擒牛老马",
       "channel": "抖音",
       "total_count": 1,
@@ -59,6 +49,16 @@
       "avg_return": -7.33,
       "max_return": -7.33,
       "min_return": -7.33
+    },
+    {
+      "blogger": "红狼擒牛",
+      "channel": "抖音",
+      "total_count": 2,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -7.36,
+      "max_return": -2.03,
+      "min_return": -12.69
     },
     {
       "blogger": "股海龙行者",
