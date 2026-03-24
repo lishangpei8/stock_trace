@@ -4,11 +4,11 @@
       "blogger": "泰哥说市",
       "channel": "抖音",
       "total_count": 3,
-      "win_count": 2,
-      "win_rate": 66.7,
-      "avg_return": 2.96,
+      "win_count": 1,
+      "win_rate": 33.3,
+      "avg_return": -1.14,
       "max_return": 10.02,
-      "min_return": -1.58
+      "min_return": -11.86
     },
     {
       "blogger": "修身养生",
@@ -66,9 +66,9 @@
       "total_count": 2,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -10.95,
-      "max_return": -9.23,
-      "min_return": -12.66
+      "avg_return": -11.13,
+      "max_return": -10.72,
+      "min_return": -11.54
     },
     {
       "blogger": "九凤盘龙",
