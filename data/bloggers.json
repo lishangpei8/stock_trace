@@ -16,9 +16,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -3.0,
-      "max_return": -3.0,
-      "min_return": -3.0
+      "avg_return": -1.11,
+      "max_return": -1.11,
+      "min_return": -1.11
     },
     {
       "blogger": "修身养性",
@@ -26,9 +26,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -5.76,
-      "max_return": -5.76,
-      "min_return": -5.76
+      "avg_return": -6.81,
+      "max_return": -6.81,
+      "min_return": -6.81
     },
     {
       "blogger": "股海狙击",
@@ -56,9 +56,9 @@
       "total_count": 2,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -10.71,
-      "max_return": -9.08,
-      "min_return": -12.35
+      "avg_return": -12.71,
+      "max_return": -11.58,
+      "min_return": -13.84
     },
     {
       "blogger": "擒牛老马",
@@ -76,9 +76,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -19.16,
-      "max_return": -19.16,
-      "min_return": -19.16
+      "avg_return": -18.46,
+      "max_return": -18.46,
+      "min_return": -18.46
     }
   ]
 }
