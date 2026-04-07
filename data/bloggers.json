@@ -6,9 +6,9 @@
       "total_count": 3,
       "win_count": 1,
       "win_rate": 33.3,
-      "avg_return": 1.01,
-      "max_return": 33.73,
-      "min_return": -18.42
+      "avg_return": 7.53,
+      "max_return": 74.7,
+      "min_return": -26.85
     },
     {
       "blogger": "修身养生",
@@ -16,9 +16,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -8.75,
-      "max_return": -8.75,
-      "min_return": -8.75
+      "avg_return": -6.24,
+      "max_return": -6.24,
+      "min_return": -6.24
     },
     {
       "blogger": "修身养性",
@@ -34,11 +34,11 @@
       "blogger": "股海狙击",
       "channel": "抖音",
       "total_count": 3,
-      "win_count": 1,
-      "win_rate": 33.3,
-      "avg_return": -9.42,
-      "max_return": 5.83,
-      "min_return": -17.68
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -15.93,
+      "max_return": -6.63,
+      "min_return": -22.84
     },
     {
       "blogger": "股海龙行者",
@@ -46,19 +46,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -10.1,
-      "max_return": -10.1,
-      "min_return": -10.1
-    },
-    {
-      "blogger": "擒牛老马",
-      "channel": "抖音",
-      "total_count": 1,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": -13.93,
-      "max_return": -13.93,
-      "min_return": -13.93
+      "avg_return": -16.03,
+      "max_return": -16.03,
+      "min_return": -16.03
     },
     {
       "blogger": "红狼擒牛",
@@ -71,14 +61,24 @@
       "min_return": -21.35
     },
     {
+      "blogger": "擒牛老马",
+      "channel": "抖音",
+      "total_count": 1,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -18.97,
+      "max_return": -18.97,
+      "min_return": -18.97
+    },
+    {
       "blogger": "九凤盘龙",
       "channel": "抖音",
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -18.46,
-      "max_return": -18.46,
-      "min_return": -18.46
+      "avg_return": -21.3,
+      "max_return": -21.3,
+      "min_return": -21.3
     }
   ]
 }
