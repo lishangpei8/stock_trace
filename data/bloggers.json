@@ -6,9 +6,19 @@
       "total_count": 1,
       "win_count": 1,
       "win_rate": 100.0,
-      "avg_return": 19.62,
-      "max_return": 19.62,
-      "min_return": 19.62
+      "avg_return": 37.92,
+      "max_return": 37.92,
+      "min_return": 37.92
+    },
+    {
+      "blogger": "泰哥说市",
+      "channel": "抖音",
+      "total_count": 3,
+      "win_count": 1,
+      "win_rate": 33.3,
+      "avg_return": 7.77,
+      "max_return": 63.79,
+      "min_return": -25.26
     },
     {
       "blogger": "修身养性",
@@ -16,9 +26,9 @@
       "total_count": 1,
       "win_count": 1,
       "win_rate": 100.0,
-      "avg_return": 6.08,
-      "max_return": 6.08,
-      "min_return": 6.08
+      "avg_return": 1.32,
+      "max_return": 1.32,
+      "min_return": 1.32
     },
     {
       "blogger": "红狼擒牛",
@@ -31,34 +41,14 @@
       "min_return": -17.72
     },
     {
-      "blogger": "泰哥说市",
-      "channel": "抖音",
-      "total_count": 3,
-      "win_count": 1,
-      "win_rate": 33.3,
-      "avg_return": -6.39,
-      "max_return": 23.12,
-      "min_return": -23.42
-    },
-    {
-      "blogger": "股海龙行者",
-      "channel": "抖音",
-      "total_count": 1,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": -7.55,
-      "max_return": -7.55,
-      "min_return": -7.55
-    },
-    {
       "blogger": "股海狙击",
       "channel": "抖音",
       "total_count": 3,
       "win_count": 1,
       "win_rate": 33.3,
-      "avg_return": -10.59,
-      "max_return": 10.8,
-      "min_return": -21.54
+      "avg_return": -7.35,
+      "max_return": 14.07,
+      "min_return": -19.41
     },
     {
       "blogger": "九凤盘龙",
@@ -66,9 +56,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -12.34,
-      "max_return": -12.34,
-      "min_return": -12.34
+      "avg_return": -10.85,
+      "max_return": -10.85,
+      "min_return": -10.85
     },
     {
       "blogger": "擒牛老马",
@@ -76,9 +66,19 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -14.94,
-      "max_return": -14.94,
-      "min_return": -14.94
+      "avg_return": -16.78,
+      "max_return": -16.78,
+      "min_return": -16.78
+    },
+    {
+      "blogger": "股海龙行者",
+      "channel": "抖音",
+      "total_count": 1,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -21.02,
+      "max_return": -21.02,
+      "min_return": -21.02
     }
   ]
 }
