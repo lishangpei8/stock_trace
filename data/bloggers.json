@@ -21,16 +21,6 @@
       "min_return": -25.26
     },
     {
-      "blogger": "修身养性",
-      "channel": "小红书",
-      "total_count": 1,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": -0.27,
-      "max_return": -0.27,
-      "min_return": -0.27
-    },
-    {
       "blogger": "红狼擒牛",
       "channel": "抖音",
       "total_count": 2,
@@ -39,6 +29,16 @@
       "avg_return": -1.7,
       "max_return": 13.38,
       "min_return": -16.79
+    },
+    {
+      "blogger": "修身养性",
+      "channel": "小红书",
+      "total_count": 1,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -2.84,
+      "max_return": -2.84,
+      "min_return": -2.84
     },
     {
       "blogger": "股海狙击",
