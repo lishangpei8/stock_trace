@@ -6,9 +6,9 @@
       "total_count": 1,
       "win_count": 1,
       "win_rate": 100.0,
-      "avg_return": 37.27,
-      "max_return": 37.27,
-      "min_return": 37.27
+      "avg_return": 38.85,
+      "max_return": 38.85,
+      "min_return": 38.85
     },
     {
       "blogger": "泰哥说市",
@@ -26,19 +26,19 @@
       "total_count": 2,
       "win_count": 1,
       "win_rate": 50.0,
-      "avg_return": -1.7,
-      "max_return": 13.38,
-      "min_return": -16.79
+      "avg_return": 1.9,
+      "max_return": 17.61,
+      "min_return": -13.81
     },
     {
       "blogger": "修身养性",
       "channel": "小红书",
       "total_count": 1,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": -2.84,
-      "max_return": -2.84,
-      "min_return": -2.84
+      "win_count": 1,
+      "win_rate": 100.0,
+      "avg_return": 0.46,
+      "max_return": 0.46,
+      "min_return": 0.46
     },
     {
       "blogger": "股海狙击",
