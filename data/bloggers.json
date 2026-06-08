@@ -16,9 +16,9 @@
       "total_count": 1,
       "win_count": 1,
       "win_rate": 100.0,
-      "avg_return": 31.72,
-      "max_return": 31.72,
-      "min_return": 31.72
+      "avg_return": 20.95,
+      "max_return": 20.95,
+      "min_return": 20.95
     },
     {
       "blogger": "泰哥说市",
@@ -31,16 +31,6 @@
       "min_return": -15.26
     },
     {
-      "blogger": "红狼擒牛",
-      "channel": "抖音",
-      "total_count": 2,
-      "win_count": 1,
-      "win_rate": 50.0,
-      "avg_return": -5.81,
-      "max_return": 8.61,
-      "min_return": -20.23
-    },
-    {
       "blogger": "股海狙击",
       "channel": "抖音",
       "total_count": 3,
@@ -49,6 +39,16 @@
       "avg_return": -11.02,
       "max_return": 4.88,
       "min_return": -20.23
+    },
+    {
+      "blogger": "红狼擒牛",
+      "channel": "抖音",
+      "total_count": 2,
+      "win_count": 1,
+      "win_rate": 50.0,
+      "avg_return": -11.45,
+      "max_return": 2.82,
+      "min_return": -25.72
     },
     {
       "blogger": "九凤盘龙",
