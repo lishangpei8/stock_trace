@@ -6,9 +6,9 @@
       "total_count": 1,
       "win_count": 1,
       "win_rate": 100.0,
-      "avg_return": 76.0,
-      "max_return": 76.0,
-      "min_return": 76.0
+      "avg_return": 75.82,
+      "max_return": 75.82,
+      "min_return": 75.82
     },
     {
       "blogger": "修身养性",
@@ -16,9 +16,9 @@
       "total_count": 1,
       "win_count": 1,
       "win_rate": 100.0,
-      "avg_return": 20.95,
-      "max_return": 20.95,
-      "min_return": 20.95
+      "avg_return": 23.79,
+      "max_return": 23.79,
+      "min_return": 23.79
     },
     {
       "blogger": "泰哥说市",
@@ -31,16 +31,6 @@
       "min_return": -15.26
     },
     {
-      "blogger": "股海狙击",
-      "channel": "抖音",
-      "total_count": 3,
-      "win_count": 1,
-      "win_rate": 33.3,
-      "avg_return": -11.02,
-      "max_return": 4.88,
-      "min_return": -20.23
-    },
-    {
       "blogger": "红狼擒牛",
       "channel": "抖音",
       "total_count": 2,
@@ -51,14 +41,14 @@
       "min_return": -29.41
     },
     {
-      "blogger": "九凤盘龙",
+      "blogger": "股海狙击",
       "channel": "抖音",
-      "total_count": 1,
+      "total_count": 3,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -16.5,
-      "max_return": -16.5,
-      "min_return": -16.5
+      "avg_return": -16.83,
+      "max_return": -12.56,
+      "min_return": -20.23
     },
     {
       "blogger": "擒牛老马",
@@ -66,9 +56,19 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -17.26,
-      "max_return": -17.26,
-      "min_return": -17.26
+      "avg_return": -26.27,
+      "max_return": -26.27,
+      "min_return": -26.27
+    },
+    {
+      "blogger": "九凤盘龙",
+      "channel": "抖音",
+      "total_count": 1,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -30.61,
+      "max_return": -30.61,
+      "min_return": -30.61
     },
     {
       "blogger": "股海龙行者",
@@ -76,9 +76,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -17.77,
-      "max_return": -17.77,
-      "min_return": -17.77
+      "avg_return": -38.56,
+      "max_return": -38.56,
+      "min_return": -38.56
     }
   ]
 }
