@@ -1,8 +1,8 @@
 {
   "1": {
-    "latest_price": 23.32,
-    "latest_return": -27.65,
-    "latest_date": "2026-06-18",
+    "latest_price": 25.08,
+    "latest_return": -22.18,
+    "latest_date": "2026-06-22",
     "history": [
       {
         "date": "2026-03-06",
@@ -358,6 +358,11 @@
         "date": "2026-06-18",
         "price": 23.32,
         "return_pct": -27.65
+      },
+      {
+        "date": "2026-06-22",
+        "price": 25.08,
+        "return_pct": -22.18
       }
     ]
   },
