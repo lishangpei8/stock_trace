@@ -1,8 +1,8 @@
 {
   "1": {
-    "latest_price": 22.5,
-    "latest_return": -30.19,
-    "latest_date": "2026-06-30",
+    "latest_price": 22.26,
+    "latest_return": -30.93,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-06",
@@ -393,13 +393,18 @@
         "date": "2026-06-30",
         "price": 22.5,
         "return_pct": -30.19
+      },
+      {
+        "date": "2026-07-01",
+        "price": 22.26,
+        "return_pct": -30.93
       }
     ]
   },
   "3": {
-    "latest_price": 13.41,
-    "latest_return": 4.93,
-    "latest_date": "2026-06-30",
+    "latest_price": 13.04,
+    "latest_return": 2.03,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-04",
@@ -800,6 +805,11 @@
         "date": "2026-06-30",
         "price": 13.41,
         "return_pct": 4.93
+      },
+      {
+        "date": "2026-07-01",
+        "price": 13.04,
+        "return_pct": 2.03
       }
     ]
   },
@@ -828,9 +838,9 @@
     ]
   },
   "8": {
-    "latest_price": 157.23,
-    "latest_return": 101.32,
-    "latest_date": "2026-06-30",
+    "latest_price": 152.0,
+    "latest_return": 94.62,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-09",
@@ -1216,13 +1226,18 @@
         "date": "2026-06-30",
         "price": 157.23,
         "return_pct": 101.32
+      },
+      {
+        "date": "2026-07-01",
+        "price": 152.0,
+        "return_pct": 94.62
       }
     ]
   },
   "9": {
-    "latest_price": 341.42,
-    "latest_return": 169.05,
-    "latest_date": "2026-06-30",
+    "latest_price": 333.67,
+    "latest_return": 162.94,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-09",
@@ -1608,13 +1623,18 @@
         "date": "2026-06-30",
         "price": 341.42,
         "return_pct": 169.05
+      },
+      {
+        "date": "2026-07-01",
+        "price": 333.67,
+        "return_pct": 162.94
       }
     ]
   },
   "10": {
-    "latest_price": 26.86,
-    "latest_return": -37.48,
-    "latest_date": "2026-06-29",
+    "latest_price": 28.47,
+    "latest_return": -33.73,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-09",
@@ -1995,400 +2015,420 @@
         "date": "2026-06-29",
         "price": 26.86,
         "return_pct": -37.48
+      },
+      {
+        "date": "2026-06-30",
+        "price": 28.01,
+        "return_pct": -34.8
+      },
+      {
+        "date": "2026-07-01",
+        "price": 28.47,
+        "return_pct": -33.73
       }
     ]
   },
   "11": {
-    "latest_price": 23.4,
-    "latest_return": -25.76,
-    "latest_date": "2026-06-29",
+    "latest_price": 22.67,
+    "latest_return": -28.08,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-09",
-        "price": 31.52,
-        "return_pct": 0.0
+        "price": 31.05,
+        "return_pct": -1.49
       },
       {
         "date": "2026-03-10",
-        "price": 30.8,
-        "return_pct": -2.28
+        "price": 30.33,
+        "return_pct": -3.78
       },
       {
         "date": "2026-03-11",
-        "price": 30.7,
-        "return_pct": -2.6
+        "price": 30.23,
+        "return_pct": -4.09
       },
       {
         "date": "2026-03-12",
-        "price": 30.22,
-        "return_pct": -4.12
+        "price": 29.75,
+        "return_pct": -5.62
       },
       {
         "date": "2026-03-13",
-        "price": 29.21,
-        "return_pct": -7.33
+        "price": 28.74,
+        "return_pct": -8.82
       },
       {
         "date": "2026-03-16",
-        "price": 28.7,
-        "return_pct": -8.95
-      },
-      {
-        "date": "2026-03-17",
-        "price": 28.08,
-        "return_pct": -10.91
-      },
-      {
-        "date": "2026-03-18",
         "price": 28.23,
         "return_pct": -10.44
       },
       {
+        "date": "2026-03-17",
+        "price": 27.61,
+        "return_pct": -12.4
+      },
+      {
+        "date": "2026-03-18",
+        "price": 27.76,
+        "return_pct": -11.93
+      },
+      {
         "date": "2026-03-19",
-        "price": 27.81,
-        "return_pct": -11.77
+        "price": 27.34,
+        "return_pct": -13.26
       },
       {
         "date": "2026-03-20",
-        "price": 27.4,
-        "return_pct": -13.07
+        "price": 26.93,
+        "return_pct": -14.56
       },
       {
         "date": "2026-03-23",
-        "price": 27.09,
-        "return_pct": -14.05
-      },
-      {
-        "date": "2026-03-24",
-        "price": 26.98,
-        "return_pct": -14.4
-      },
-      {
-        "date": "2026-03-25",
-        "price": 27.52,
-        "return_pct": -12.69
-      },
-      {
-        "date": "2026-03-26",
-        "price": 26.99,
-        "return_pct": -14.37
-      },
-      {
-        "date": "2026-03-27",
-        "price": 27.13,
-        "return_pct": -13.93
-      },
-      {
-        "date": "2026-03-30",
-        "price": 26.63,
-        "return_pct": -15.51
-      },
-      {
-        "date": "2026-03-31",
-        "price": 25.99,
-        "return_pct": -17.54
-      },
-      {
-        "date": "2026-04-01",
-        "price": 26.42,
-        "return_pct": -16.18
-      },
-      {
-        "date": "2026-04-02",
-        "price": 26.09,
-        "return_pct": -17.23
-      },
-      {
-        "date": "2026-04-03",
-        "price": 26.0,
-        "return_pct": -17.51
-      },
-      {
-        "date": "2026-04-07",
-        "price": 25.54,
-        "return_pct": -18.97
-      },
-      {
-        "date": "2026-04-08",
-        "price": 26.58,
-        "return_pct": -15.67
-      },
-      {
-        "date": "2026-04-09",
-        "price": 25.96,
-        "return_pct": -17.64
-      },
-      {
-        "date": "2026-04-10",
-        "price": 26.36,
-        "return_pct": -16.37
-      },
-      {
-        "date": "2026-04-13",
-        "price": 25.89,
-        "return_pct": -17.86
-      },
-      {
-        "date": "2026-04-14",
-        "price": 26.17,
-        "return_pct": -16.97
-      },
-      {
-        "date": "2026-04-15",
-        "price": 26.86,
-        "return_pct": -14.78
-      },
-      {
-        "date": "2026-04-16",
-        "price": 26.87,
-        "return_pct": -14.75
-      },
-      {
-        "date": "2026-04-17",
-        "price": 26.81,
-        "return_pct": -14.94
-      },
-      {
-        "date": "2026-04-20",
-        "price": 27.24,
-        "return_pct": -13.58
-      },
-      {
-        "date": "2026-04-21",
-        "price": 27.03,
-        "return_pct": -14.24
-      },
-      {
-        "date": "2026-04-22",
-        "price": 27.01,
-        "return_pct": -14.31
-      },
-      {
-        "date": "2026-04-23",
-        "price": 26.95,
-        "return_pct": -14.5
-      },
-      {
-        "date": "2026-04-24",
-        "price": 26.54,
-        "return_pct": -15.8
-      },
-      {
-        "date": "2026-04-27",
-        "price": 26.23,
-        "return_pct": -16.78
-      },
-      {
-        "date": "2026-04-28",
-        "price": 26.07,
-        "return_pct": -17.29
-      },
-      {
-        "date": "2026-04-29",
         "price": 26.62,
         "return_pct": -15.55
       },
       {
-        "date": "2026-04-30",
-        "price": 25.97,
-        "return_pct": -17.61
+        "date": "2026-03-24",
+        "price": 26.51,
+        "return_pct": -15.89
       },
       {
-        "date": "2026-05-06",
-        "price": 26.22,
-        "return_pct": -16.81
+        "date": "2026-03-25",
+        "price": 27.05,
+        "return_pct": -14.18
       },
       {
-        "date": "2026-05-07",
-        "price": 26.44,
-        "return_pct": -16.12
+        "date": "2026-03-26",
+        "price": 26.52,
+        "return_pct": -15.86
       },
       {
-        "date": "2026-05-08",
-        "price": 26.08,
-        "return_pct": -17.26
+        "date": "2026-03-27",
+        "price": 26.66,
+        "return_pct": -15.42
       },
       {
-        "date": "2026-05-11",
-        "price": 26.85,
-        "return_pct": -14.82
+        "date": "2026-03-30",
+        "price": 26.16,
+        "return_pct": -17.01
       },
       {
-        "date": "2026-05-12",
-        "price": 26.9,
-        "return_pct": -14.66
+        "date": "2026-03-31",
+        "price": 25.52,
+        "return_pct": -19.04
       },
       {
-        "date": "2026-05-13",
-        "price": 28.02,
-        "return_pct": -11.1
+        "date": "2026-04-01",
+        "price": 25.95,
+        "return_pct": -17.67
       },
       {
-        "date": "2026-05-14",
-        "price": 27.27,
-        "return_pct": -13.48
+        "date": "2026-04-02",
+        "price": 25.62,
+        "return_pct": -18.72
       },
       {
-        "date": "2026-05-15",
+        "date": "2026-04-03",
+        "price": 25.53,
+        "return_pct": -19.0
+      },
+      {
+        "date": "2026-04-07",
+        "price": 25.07,
+        "return_pct": -20.46
+      },
+      {
+        "date": "2026-04-08",
+        "price": 26.11,
+        "return_pct": -17.16
+      },
+      {
+        "date": "2026-04-09",
+        "price": 25.49,
+        "return_pct": -19.13
+      },
+      {
+        "date": "2026-04-10",
+        "price": 25.89,
+        "return_pct": -17.86
+      },
+      {
+        "date": "2026-04-13",
+        "price": 25.42,
+        "return_pct": -19.35
+      },
+      {
+        "date": "2026-04-14",
+        "price": 25.7,
+        "return_pct": -18.46
+      },
+      {
+        "date": "2026-04-15",
+        "price": 26.39,
+        "return_pct": -16.28
+      },
+      {
+        "date": "2026-04-16",
+        "price": 26.4,
+        "return_pct": -16.24
+      },
+      {
+        "date": "2026-04-17",
+        "price": 26.34,
+        "return_pct": -16.43
+      },
+      {
+        "date": "2026-04-20",
+        "price": 26.77,
+        "return_pct": -15.07
+      },
+      {
+        "date": "2026-04-21",
+        "price": 26.56,
+        "return_pct": -15.74
+      },
+      {
+        "date": "2026-04-22",
+        "price": 26.54,
+        "return_pct": -15.8
+      },
+      {
+        "date": "2026-04-23",
         "price": 26.48,
         "return_pct": -15.99
       },
       {
+        "date": "2026-04-24",
+        "price": 26.07,
+        "return_pct": -17.29
+      },
+      {
+        "date": "2026-04-27",
+        "price": 25.76,
+        "return_pct": -18.27
+      },
+      {
+        "date": "2026-04-28",
+        "price": 25.6,
+        "return_pct": -18.78
+      },
+      {
+        "date": "2026-04-29",
+        "price": 26.15,
+        "return_pct": -17.04
+      },
+      {
+        "date": "2026-04-30",
+        "price": 25.5,
+        "return_pct": -19.1
+      },
+      {
+        "date": "2026-05-06",
+        "price": 25.75,
+        "return_pct": -18.31
+      },
+      {
+        "date": "2026-05-07",
+        "price": 25.97,
+        "return_pct": -17.61
+      },
+      {
+        "date": "2026-05-08",
+        "price": 25.61,
+        "return_pct": -18.75
+      },
+      {
+        "date": "2026-05-11",
+        "price": 26.38,
+        "return_pct": -16.31
+      },
+      {
+        "date": "2026-05-12",
+        "price": 26.43,
+        "return_pct": -16.15
+      },
+      {
+        "date": "2026-05-13",
+        "price": 27.55,
+        "return_pct": -12.6
+      },
+      {
+        "date": "2026-05-14",
+        "price": 26.8,
+        "return_pct": -14.97
+      },
+      {
+        "date": "2026-05-15",
+        "price": 26.01,
+        "return_pct": -17.48
+      },
+      {
         "date": "2026-05-18",
-        "price": 26.49,
-        "return_pct": -15.96
+        "price": 26.02,
+        "return_pct": -17.45
       },
       {
         "date": "2026-05-19",
-        "price": 26.97,
-        "return_pct": -14.44
+        "price": 26.5,
+        "return_pct": -15.93
       },
       {
         "date": "2026-05-20",
-        "price": 26.53,
-        "return_pct": -15.83
+        "price": 26.06,
+        "return_pct": -17.32
       },
       {
         "date": "2026-05-21",
-        "price": 25.66,
-        "return_pct": -18.59
+        "price": 25.19,
+        "return_pct": -20.08
       },
       {
         "date": "2026-05-22",
-        "price": 25.83,
-        "return_pct": -18.05
+        "price": 25.36,
+        "return_pct": -19.54
       },
       {
         "date": "2026-05-25",
-        "price": 26.26,
-        "return_pct": -16.69
+        "price": 25.79,
+        "return_pct": -18.18
       },
       {
         "date": "2026-05-26",
-        "price": 25.48,
-        "return_pct": -19.16
+        "price": 25.01,
+        "return_pct": -20.65
       },
       {
         "date": "2026-05-27",
-        "price": 25.57,
-        "return_pct": -18.88
-      },
-      {
-        "date": "2026-05-28",
         "price": 25.1,
         "return_pct": -20.37
       },
       {
+        "date": "2026-05-28",
+        "price": 24.63,
+        "return_pct": -21.86
+      },
+      {
         "date": "2026-05-29",
-        "price": 24.9,
-        "return_pct": -21.0
+        "price": 24.43,
+        "return_pct": -22.49
       },
       {
         "date": "2026-06-01",
-        "price": 25.22,
-        "return_pct": -19.99
+        "price": 24.75,
+        "return_pct": -21.48
       },
       {
         "date": "2026-06-02",
-        "price": 24.64,
-        "return_pct": -21.83
+        "price": 24.17,
+        "return_pct": -23.32
       },
       {
         "date": "2026-06-03",
-        "price": 24.25,
-        "return_pct": -23.06
+        "price": 23.78,
+        "return_pct": -24.56
       },
       {
         "date": "2026-06-04",
-        "price": 23.8,
-        "return_pct": -24.49
+        "price": 23.33,
+        "return_pct": -25.98
       },
       {
         "date": "2026-06-05",
-        "price": 23.45,
-        "return_pct": -25.6
+        "price": 22.98,
+        "return_pct": -27.09
       },
       {
         "date": "2026-06-08",
-        "price": 22.86,
-        "return_pct": -27.47
+        "price": 22.39,
+        "return_pct": -28.97
       },
       {
         "date": "2026-06-09",
-        "price": 23.04,
-        "return_pct": -26.9
+        "price": 22.57,
+        "return_pct": -28.39
       },
       {
         "date": "2026-06-10",
-        "price": 22.68,
-        "return_pct": -28.05
+        "price": 22.21,
+        "return_pct": -29.54
       },
       {
         "date": "2026-06-11",
+        "price": 22.38,
+        "return_pct": -29.0
+      },
+      {
+        "date": "2026-06-12",
+        "price": 22.77,
+        "return_pct": -27.76
+      },
+      {
+        "date": "2026-06-15",
+        "price": 22.99,
+        "return_pct": -27.06
+      },
+      {
+        "date": "2026-06-16",
+        "price": 23.07,
+        "return_pct": -26.81
+      },
+      {
+        "date": "2026-06-17",
         "price": 22.85,
         "return_pct": -27.51
       },
       {
-        "date": "2026-06-12",
-        "price": 23.24,
-        "return_pct": -26.27
-      },
-      {
-        "date": "2026-06-15",
-        "price": 23.46,
-        "return_pct": -25.57
-      },
-      {
-        "date": "2026-06-16",
-        "price": 23.54,
-        "return_pct": -25.32
-      },
-      {
-        "date": "2026-06-17",
-        "price": 23.32,
-        "return_pct": -26.02
-      },
-      {
         "date": "2026-06-18",
-        "price": 23.06,
-        "return_pct": -26.84
+        "price": 22.59,
+        "return_pct": -28.33
       },
       {
         "date": "2026-06-22",
-        "price": 23.95,
-        "return_pct": -24.02
+        "price": 23.48,
+        "return_pct": -25.51
       },
       {
         "date": "2026-06-23",
-        "price": 23.17,
-        "return_pct": -26.49
+        "price": 22.7,
+        "return_pct": -27.98
       },
       {
         "date": "2026-06-24",
-        "price": 22.95,
-        "return_pct": -27.19
+        "price": 22.48,
+        "return_pct": -28.68
       },
       {
         "date": "2026-06-25",
-        "price": 22.83,
-        "return_pct": -27.57
+        "price": 22.36,
+        "return_pct": -29.06
       },
       {
         "date": "2026-06-26",
-        "price": 22.74,
-        "return_pct": -27.86
+        "price": 22.27,
+        "return_pct": -29.35
       },
       {
         "date": "2026-06-29",
-        "price": 23.4,
-        "return_pct": -25.76
+        "price": 22.93,
+        "return_pct": -27.25
+      },
+      {
+        "date": "2026-06-30",
+        "price": 22.85,
+        "return_pct": -27.51
+      },
+      {
+        "date": "2026-07-01",
+        "price": 22.67,
+        "return_pct": -28.08
       }
     ]
   },
   "12": {
-    "latest_price": 4.65,
-    "latest_return": -45.99,
-    "latest_date": "2026-06-29",
+    "latest_price": 4.76,
+    "latest_return": -44.72,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-09",
@@ -2769,13 +2809,23 @@
         "date": "2026-06-29",
         "price": 4.65,
         "return_pct": -45.99
+      },
+      {
+        "date": "2026-06-30",
+        "price": 4.75,
+        "return_pct": -44.83
+      },
+      {
+        "date": "2026-07-01",
+        "price": 4.76,
+        "return_pct": -44.72
       }
     ]
   },
   "13": {
     "latest_price": 2.69,
     "latest_return": -29.21,
-    "latest_date": "2026-06-29",
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-12",
@@ -3141,13 +3191,23 @@
         "date": "2026-06-29",
         "price": 2.69,
         "return_pct": -29.21
+      },
+      {
+        "date": "2026-06-30",
+        "price": 2.67,
+        "return_pct": -29.74
+      },
+      {
+        "date": "2026-07-01",
+        "price": 2.69,
+        "return_pct": -29.21
       }
     ]
   },
   "14": {
-    "latest_price": 21.73,
-    "latest_return": -30.55,
-    "latest_date": "2026-06-29",
+    "latest_price": 24.66,
+    "latest_return": -21.19,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-12",
@@ -3513,13 +3573,23 @@
         "date": "2026-06-29",
         "price": 21.73,
         "return_pct": -30.55
+      },
+      {
+        "date": "2026-06-30",
+        "price": 23.9,
+        "return_pct": -23.62
+      },
+      {
+        "date": "2026-07-01",
+        "price": 24.66,
+        "return_pct": -21.19
       }
     ]
   },
   "15": {
-    "latest_price": 7.97,
-    "latest_return": -20.93,
-    "latest_date": "2026-06-29",
+    "latest_price": 8.2,
+    "latest_return": -18.65,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-12",
@@ -3885,13 +3955,23 @@
         "date": "2026-06-29",
         "price": 7.97,
         "return_pct": -20.93
+      },
+      {
+        "date": "2026-06-30",
+        "price": 8.06,
+        "return_pct": -20.04
+      },
+      {
+        "date": "2026-07-01",
+        "price": 8.2,
+        "return_pct": -18.65
       }
     ]
   },
   "16": {
-    "latest_price": 31.96,
-    "latest_return": -24.36,
-    "latest_date": "2026-06-29",
+    "latest_price": 31.1,
+    "latest_return": -26.39,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-12",
@@ -4257,13 +4337,23 @@
         "date": "2026-06-29",
         "price": 31.96,
         "return_pct": -24.36
+      },
+      {
+        "date": "2026-06-30",
+        "price": 30.4,
+        "return_pct": -28.05
+      },
+      {
+        "date": "2026-07-01",
+        "price": 31.1,
+        "return_pct": -26.39
       }
     ]
   },
   "17": {
-    "latest_price": 47.88,
-    "latest_return": 18.69,
-    "latest_date": "2026-06-29",
+    "latest_price": 45.67,
+    "latest_return": 13.21,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-12",
@@ -4629,13 +4719,23 @@
         "date": "2026-06-29",
         "price": 47.88,
         "return_pct": 18.69
+      },
+      {
+        "date": "2026-06-30",
+        "price": 46.97,
+        "return_pct": 16.44
+      },
+      {
+        "date": "2026-07-01",
+        "price": 45.67,
+        "return_pct": 13.21
       }
     ]
   },
   "18": {
-    "latest_price": 27.49,
-    "latest_return": -15.18,
-    "latest_date": "2026-06-29",
+    "latest_price": 28.47,
+    "latest_return": -12.16,
+    "latest_date": "2026-07-01",
     "history": [
       {
         "date": "2026-03-13",
@@ -4996,6 +5096,16 @@
         "date": "2026-06-29",
         "price": 27.49,
         "return_pct": -15.18
+      },
+      {
+        "date": "2026-06-30",
+        "price": 28.93,
+        "return_pct": -10.74
+      },
+      {
+        "date": "2026-07-01",
+        "price": 28.47,
+        "return_pct": -12.16
       }
     ]
   }
