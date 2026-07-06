@@ -46,9 +46,9 @@
       "total_count": 3,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -23.02,
+      "avg_return": -24.34,
       "max_return": -18.65,
-      "min_return": -29.21
+      "min_return": -30.79
     },
     {
       "blogger": "擒牛老马",
@@ -76,9 +76,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -44.72,
-      "max_return": -44.72,
-      "min_return": -44.72
+      "avg_return": -50.29,
+      "max_return": -50.29,
+      "min_return": -50.29
     }
   ]
 }
