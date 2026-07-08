@@ -34,11 +34,11 @@
       "blogger": "红狼擒牛",
       "channel": "抖音",
       "total_count": 2,
-      "win_count": 1,
-      "win_rate": 50.0,
-      "avg_return": -17.72,
-      "max_return": 0.63,
-      "min_return": -36.08
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -20.42,
+      "max_return": -3.05,
+      "min_return": -37.79
     },
     {
       "blogger": "泰哥说市",
