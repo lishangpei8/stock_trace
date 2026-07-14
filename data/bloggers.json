@@ -41,16 +41,6 @@
       "min_return": -40.61
     },
     {
-      "blogger": "泰哥说市",
-      "channel": "抖音",
-      "total_count": 3,
-      "win_count": 0,
-      "win_rate": 0.0,
-      "avg_return": -26.79,
-      "max_return": -18.65,
-      "min_return": -32.63
-    },
-    {
       "blogger": "擒牛老马",
       "channel": "抖音",
       "total_count": 1,
@@ -59,6 +49,16 @@
       "avg_return": -28.08,
       "max_return": -28.08,
       "min_return": -28.08
+    },
+    {
+      "blogger": "泰哥说市",
+      "channel": "抖音",
+      "total_count": 3,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -30.35,
+      "max_return": -18.65,
+      "min_return": -38.73
     },
     {
       "blogger": "九凤盘龙",
