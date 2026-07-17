@@ -34,10 +34,10 @@
       "blogger": "红狼擒牛",
       "channel": "抖音",
       "total_count": 2,
-      "win_count": 1,
-      "win_rate": 50.0,
-      "avg_return": -19.8,
-      "max_return": 2.5,
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -21.8,
+      "max_return": -1.49,
       "min_return": -42.1
     },
     {
