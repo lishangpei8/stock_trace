@@ -1,8 +1,8 @@
 {
   "1": {
-    "latest_price": 21.38,
-    "latest_return": -33.66,
-    "latest_date": "2026-08-11",
+    "latest_price": 21.34,
+    "latest_return": -33.79,
+    "latest_date": "2026-08-12",
     "history": [
       {
         "date": "2026-03-06",
@@ -543,13 +543,18 @@
         "date": "2026-08-11",
         "price": 21.38,
         "return_pct": -33.66
+      },
+      {
+        "date": "2026-08-12",
+        "price": 21.34,
+        "return_pct": -33.79
       }
     ]
   },
   "3": {
-    "latest_price": 14.41,
-    "latest_return": 12.75,
-    "latest_date": "2026-08-07",
+    "latest_price": 14.71,
+    "latest_return": 15.1,
+    "latest_date": "2026-08-12",
     "history": [
       {
         "date": "2026-03-04",
@@ -1090,6 +1095,21 @@
         "date": "2026-08-07",
         "price": 14.41,
         "return_pct": 12.75
+      },
+      {
+        "date": "2026-08-10",
+        "price": 14.84,
+        "return_pct": 16.12
+      },
+      {
+        "date": "2026-08-11",
+        "price": 14.61,
+        "return_pct": 14.32
+      },
+      {
+        "date": "2026-08-12",
+        "price": 14.71,
+        "return_pct": 15.1
       }
     ]
   },
@@ -1645,9 +1665,9 @@
     ]
   },
   "9": {
-    "latest_price": 278.53,
-    "latest_return": 119.49,
-    "latest_date": "2026-08-06",
+    "latest_price": 287.11,
+    "latest_return": 126.25,
+    "latest_date": "2026-08-12",
     "history": [
       {
         "date": "2026-03-09",
@@ -2168,13 +2188,33 @@
         "date": "2026-08-06",
         "price": 278.53,
         "return_pct": 119.49
+      },
+      {
+        "date": "2026-08-07",
+        "price": 283.21,
+        "return_pct": 123.18
+      },
+      {
+        "date": "2026-08-10",
+        "price": 288.08,
+        "return_pct": 127.01
+      },
+      {
+        "date": "2026-08-11",
+        "price": 281.04,
+        "return_pct": 121.47
+      },
+      {
+        "date": "2026-08-12",
+        "price": 287.11,
+        "return_pct": 126.25
       }
     ]
   },
   "10": {
-    "latest_price": 27.4,
-    "latest_return": -36.22,
-    "latest_date": "2026-08-06",
+    "latest_price": 26.27,
+    "latest_return": -38.85,
+    "latest_date": "2026-08-12",
     "history": [
       {
         "date": "2026-03-09",
@@ -2695,6 +2735,26 @@
         "date": "2026-08-06",
         "price": 27.4,
         "return_pct": -36.22
+      },
+      {
+        "date": "2026-08-07",
+        "price": 27.19,
+        "return_pct": -36.71
+      },
+      {
+        "date": "2026-08-10",
+        "price": 26.01,
+        "return_pct": -39.46
+      },
+      {
+        "date": "2026-08-11",
+        "price": 26.32,
+        "return_pct": -38.73
+      },
+      {
+        "date": "2026-08-12",
+        "price": 26.27,
+        "return_pct": -38.85
       }
     ]
   },
