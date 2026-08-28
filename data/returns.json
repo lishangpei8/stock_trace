@@ -1,8 +1,8 @@
 {
   "1": {
-    "latest_price": 19.36,
-    "latest_return": -39.93,
-    "latest_date": "2026-08-27",
+    "latest_price": 19.3,
+    "latest_return": -40.12,
+    "latest_date": "2026-08-28",
     "history": [
       {
         "date": "2026-03-06",
@@ -603,13 +603,18 @@
         "date": "2026-08-27",
         "price": 19.36,
         "return_pct": -39.93
+      },
+      {
+        "date": "2026-08-28",
+        "price": 19.3,
+        "return_pct": -40.12
       }
     ]
   },
   "3": {
-    "latest_price": 13.08,
-    "latest_return": 2.35,
-    "latest_date": "2026-08-27",
+    "latest_price": 13.02,
+    "latest_return": 1.88,
+    "latest_date": "2026-08-28",
     "history": [
       {
         "date": "2026-03-04",
@@ -1220,6 +1225,11 @@
         "date": "2026-08-27",
         "price": 13.08,
         "return_pct": 2.35
+      },
+      {
+        "date": "2026-08-28",
+        "price": 13.02,
+        "return_pct": 1.88
       }
     ]
   },
@@ -1248,9 +1258,9 @@
     ]
   },
   "8": {
-    "latest_price": 96.93,
-    "latest_return": 24.11,
-    "latest_date": "2026-08-27",
+    "latest_price": 94.43,
+    "latest_return": 20.91,
+    "latest_date": "2026-08-28",
     "history": [
       {
         "date": "2026-03-09",
@@ -1846,13 +1856,18 @@
         "date": "2026-08-27",
         "price": 96.93,
         "return_pct": 24.11
+      },
+      {
+        "date": "2026-08-28",
+        "price": 94.43,
+        "return_pct": 20.91
       }
     ]
   },
   "9": {
-    "latest_price": 276.2,
-    "latest_return": 117.65,
-    "latest_date": "2026-08-26",
+    "latest_price": 277.11,
+    "latest_return": 118.37,
+    "latest_date": "2026-08-28",
     "history": [
       {
         "date": "2026-03-09",
@@ -2443,6 +2458,16 @@
         "date": "2026-08-26",
         "price": 276.2,
         "return_pct": 117.65
+      },
+      {
+        "date": "2026-08-27",
+        "price": 284.8,
+        "return_pct": 124.43
+      },
+      {
+        "date": "2026-08-28",
+        "price": 277.11,
+        "return_pct": 118.37
       }
     ]
   },
