@@ -36,9 +36,9 @@
       "total_count": 2,
       "win_count": 1,
       "win_rate": 50.0,
-      "avg_return": -20.01,
-      "max_return": 1.56,
-      "min_return": -41.58
+      "avg_return": -19.79,
+      "max_return": 1.64,
+      "min_return": -41.23
     },
     {
       "blogger": "擒牛老马",
@@ -46,9 +46,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -25.32,
-      "max_return": -25.32,
-      "min_return": -25.32
+      "avg_return": -28.01,
+      "max_return": -28.01,
+      "min_return": -28.01
     },
     {
       "blogger": "泰哥说市",
@@ -76,9 +76,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -50.29,
-      "max_return": -50.29,
-      "min_return": -50.29
+      "avg_return": -44.37,
+      "max_return": -44.37,
+      "min_return": -44.37
     }
   ]
 }
