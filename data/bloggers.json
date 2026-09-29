@@ -6,9 +6,9 @@
       "total_count": 1,
       "win_count": 1,
       "win_rate": 100.0,
-      "avg_return": 113.7,
-      "max_return": 113.7,
-      "min_return": 113.7
+      "avg_return": 95.34,
+      "max_return": 95.34,
+      "min_return": 95.34
     },
     {
       "blogger": "修身养性",
@@ -16,9 +16,9 @@
       "total_count": 1,
       "win_count": 1,
       "win_rate": 100.0,
-      "avg_return": 17.02,
-      "max_return": 17.02,
-      "min_return": 17.02
+      "avg_return": 10.12,
+      "max_return": 10.12,
+      "min_return": 10.12
     },
     {
       "blogger": "股海狙击",
@@ -46,9 +46,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -29.0,
-      "max_return": -29.0,
-      "min_return": -29.0
+      "avg_return": -29.54,
+      "max_return": -29.54,
+      "min_return": -29.54
     },
     {
       "blogger": "泰哥说市",
@@ -56,7 +56,7 @@
       "total_count": 3,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -30.44,
+      "avg_return": -31.67,
       "max_return": -18.65,
       "min_return": -38.73
     },
@@ -66,9 +66,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -41.25,
-      "max_return": -41.25,
-      "min_return": -41.25
+      "avg_return": -43.95,
+      "max_return": -43.95,
+      "min_return": -43.95
     },
     {
       "blogger": "股海龙行者",
@@ -76,9 +76,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -47.27,
-      "max_return": -47.27,
-      "min_return": -47.27
+      "avg_return": -50.64,
+      "max_return": -50.64,
+      "min_return": -50.64
     }
   ]
 }
