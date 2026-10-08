@@ -26,9 +26,9 @@
       "total_count": 3,
       "win_count": 1,
       "win_rate": 33.3,
-      "avg_return": -8.45,
+      "avg_return": -10.97,
       "max_return": 13.21,
-      "min_return": -26.39
+      "min_return": -33.96
     },
     {
       "blogger": "红狼擒牛",
@@ -46,9 +46,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -28.55,
-      "max_return": -28.55,
-      "min_return": -28.55
+      "avg_return": -27.47,
+      "max_return": -27.47,
+      "min_return": -27.47
     },
     {
       "blogger": "泰哥说市",
@@ -56,9 +56,9 @@
       "total_count": 3,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -31.67,
-      "max_return": -18.65,
-      "min_return": -38.73
+      "avg_return": -38.44,
+      "max_return": -31.25,
+      "min_return": -46.69
     },
     {
       "blogger": "九凤盘龙",
@@ -66,9 +66,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -44.79,
-      "max_return": -44.79,
-      "min_return": -44.79
+      "avg_return": -44.09,
+      "max_return": -44.09,
+      "min_return": -44.09
     },
     {
       "blogger": "股海龙行者",
@@ -76,9 +76,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -51.22,
-      "max_return": -51.22,
-      "min_return": -51.22
+      "avg_return": -52.15,
+      "max_return": -52.15,
+      "min_return": -52.15
     }
   ]
 }
