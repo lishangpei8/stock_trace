@@ -14,11 +14,11 @@
       "blogger": "修身养性",
       "channel": "小红书",
       "total_count": 1,
-      "win_count": 1,
-      "win_rate": 100.0,
-      "avg_return": 3.2,
-      "max_return": 3.2,
-      "min_return": 3.2
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -1.28,
+      "max_return": -1.28,
+      "min_return": -1.28
     },
     {
       "blogger": "红狼擒牛",
