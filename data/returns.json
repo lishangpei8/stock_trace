@@ -3137,9 +3137,9 @@
     ]
   },
   "10": {
-    "latest_price": 21.41,
-    "latest_return": -50.16,
-    "latest_date": "2026-10-22",
+    "latest_price": 22.33,
+    "latest_return": -48.02,
+    "latest_date": "2026-10-23",
     "history": [
       {
         "date": "2026-03-09",
@@ -3905,6 +3905,11 @@
         "date": "2026-10-22",
         "price": 21.41,
         "return_pct": -50.16
+      },
+      {
+        "date": "2026-10-23",
+        "price": 22.33,
+        "return_pct": -48.02
       }
     ]
   },
