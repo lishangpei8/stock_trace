@@ -6,19 +6,19 @@
       "total_count": 1,
       "win_count": 1,
       "win_rate": 100.0,
-      "avg_return": 45.78,
-      "max_return": 45.78,
-      "min_return": 45.78
+      "avg_return": 47.53,
+      "max_return": 47.53,
+      "min_return": 47.53
     },
     {
       "blogger": "修身养性",
       "channel": "小红书",
       "total_count": 1,
-      "win_count": 1,
-      "win_rate": 100.0,
-      "avg_return": 0.03,
-      "max_return": 0.03,
-      "min_return": 0.03
+      "win_count": 0,
+      "win_rate": 0.0,
+      "avg_return": -0.52,
+      "max_return": -0.52,
+      "min_return": -0.52
     },
     {
       "blogger": "红狼擒牛",
@@ -26,8 +26,8 @@
       "total_count": 2,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -23.94,
-      "max_return": -4.23,
+      "avg_return": -23.86,
+      "max_return": -4.07,
       "min_return": -43.65
     },
     {
@@ -36,9 +36,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -24.81,
-      "max_return": -24.81,
-      "min_return": -24.81
+      "avg_return": -25.35,
+      "max_return": -25.35,
+      "min_return": -25.35
     },
     {
       "blogger": "股海狙击",
@@ -46,9 +46,9 @@
       "total_count": 3,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -38.93,
-      "max_return": -35.58,
-      "min_return": -41.57
+      "avg_return": -36.56,
+      "max_return": -32.3,
+      "min_return": -40.13
     },
     {
       "blogger": "泰哥说市",
@@ -56,8 +56,8 @@
       "total_count": 3,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -45.11,
-      "max_return": -38.42,
+      "avg_return": -44.44,
+      "max_return": -38.68,
       "min_return": -51.97
     },
     {
@@ -66,9 +66,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -50.0,
-      "max_return": -50.0,
-      "min_return": -50.0
+      "avg_return": -48.3,
+      "max_return": -48.3,
+      "min_return": -48.3
     },
     {
       "blogger": "股海龙行者",
@@ -76,9 +76,9 @@
       "total_count": 1,
       "win_count": 0,
       "win_rate": 0.0,
-      "avg_return": -53.66,
-      "max_return": -53.66,
-      "min_return": -53.66
+      "avg_return": -49.01,
+      "max_return": -49.01,
+      "min_return": -49.01
     }
   ]
 }
